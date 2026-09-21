@@ -8,10 +8,10 @@ Open `index.html` in a browser, or serve this directory with any static HTTP ser
 
 ## Project structure
 
-- `index.html` — page markup
-- `css/styles.css` — responsive visual styling
-- `js/main.js` — small progressive enhancement
-- `images/` — reserved for site imagery
+- `index.html`: page markup
+- `css/styles.css`: responsive visual styling
+- `js/main.js`: small progressive enhancement
+- `images/`: reserved for site imagery
 
 ## Inquiry email drafts
 
