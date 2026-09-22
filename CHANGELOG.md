@@ -4,6 +4,17 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
+## [0.1.3] - 2026-09-22
+
+### Added
+
+- Added student testimonials from Anthony, a BBA graduate, and Anna, a Grade 11 Honour Roll student to the preview page.
+
+### Changed
+
+- Grouped preview testimonial cards into a vertically spaced list for consistent two-column section layout.
+- Updated the preview stylesheet cache version to ensure the new testimonial layout loads immediately.
+
 ## [0.1.2] - 2026-09-22
 
 ### Changed
