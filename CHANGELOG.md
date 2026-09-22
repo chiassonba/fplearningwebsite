@@ -4,6 +4,13 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
+## [0.1.2] - 2026-09-22
+
+### Changed
+
+- Promoted the approved hash-free in-page navigation behavior from the preview page to the public `index.html`.
+- Preserved production metadata and search-engine accessibility; no preview banner, preview title, preview stylesheet, or `noindex` directive was transferred.
+
 ## [0.1.1] - 2026-09-22
 
 ### Changed
