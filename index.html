@@ -143,6 +143,23 @@
     </main>
 
     <footer><span>© <span id="year"></span> First Principles Learning</span><span>Learning with care.</span></footer>
+    <script>
+      document.querySelectorAll('a[href^="#"]:not([href="#"])').forEach((link) => {
+        link.addEventListener("click", (event) => {
+          const target = document.querySelector(link.getAttribute("href"));
+          if (!target) return;
+
+          event.preventDefault();
+          target.scrollIntoView({ block: "start" });
+          history.replaceState(null, "", window.location.pathname + window.location.search);
+
+          if (link.classList.contains("skip-link")) {
+            target.setAttribute("tabindex", "-1");
+            target.focus({ preventScroll: true });
+          }
+        });
+      });
+    </script>
     <script src="js/main.js"></script>
   </body>
 </html>
