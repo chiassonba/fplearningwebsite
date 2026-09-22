@@ -4,6 +4,18 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
+## [0.1.4] - 2026-09-22
+
+### Added
+
+- Promoted Anthony's and Anna's approved student testimonials to the public site.
+
+### Changed
+
+- Promoted the stacked testimonial-card layout to the production stylesheet.
+- Updated the production stylesheet cache version so the approved layout loads immediately.
+- Preserved all public metadata and search-engine accessibility settings.
+
 ## [0.1.3] - 2026-09-22
 
 ### Added
