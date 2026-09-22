@@ -4,6 +4,13 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
+## [0.1.5] - 2026-09-22
+
+### Changed
+
+- Reduced the preview page's "There are no strings on me!" banner by approximately 25 percent, including its container, spacing, headline, decorative circles, and celebration marks.
+- Updated the preview stylesheet cache version so the resized banner loads immediately.
+
 ## [0.1.4] - 2026-09-22
 
 ### Added
