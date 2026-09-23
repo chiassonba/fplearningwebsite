@@ -4,6 +4,14 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
+## [0.1.9] - 2026-09-23
+
+### Changed
+
+- Replaced all preview-page references to the former Gmail address with `info@fplearning.ca`.
+- Added a preview-only inquiry script so prepared email drafts use the new domain address without changing production behavior.
+- Updated the preview script reference with a cache version so the new recipient loads immediately.
+
 ## [0.1.8] - 2026-09-23
 
 ### Changed
