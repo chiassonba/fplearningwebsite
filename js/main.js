@@ -19,6 +19,6 @@ inquiryForm?.addEventListener("submit", (event) => {
   ].map(([label, value]) => label + ": " + value).join("\n");
 
   const subject = "Parent inquiry: " + values.get("studentName");
-  const draftUrl = "mailto:fplearning.info@gmail.com?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(details);
+  const draftUrl = "mailto:info@fplearning.ca?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(details);
   window.open(draftUrl, "_blank", "noopener,noreferrer");
 });
