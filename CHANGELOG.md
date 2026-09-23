@@ -4,6 +4,17 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
+## [0.1.19] - 2026-09-23
+
+### Changed
+
+- Restored the full navigation on mobile in the preview so Our approach, Testimonials, and Get in touch remain directly accessible.
+- Arranged the mobile navigation as a full-width row beneath the brand with spacing suitable for narrow screens.
+- Added 44-pixel minimum touch targets to the preview navigation links.
+- Updated the preview stylesheet cache version so the mobile navigation correction loads immediately.
+- Left the production page and stylesheet unchanged pending explicit approval.
+
+
 ## [0.1.18] - 2026-09-23
 
 ### Changed
