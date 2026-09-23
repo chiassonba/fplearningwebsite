@@ -4,6 +4,14 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
+## [0.1.6] - 2026-09-23
+
+### Changed
+
+- Updated the preview hero introduction to state more than 20 years of experience working with over 100 families.
+- Added that First Principles Learning often supports more than one student within the same household.
+- Connected this experience directly to the site's emphasis on consistent, long-term educational support.
+
 ## [0.1.5] - 2026-09-22
 
 ### Changed
