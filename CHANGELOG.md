@@ -4,6 +4,13 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
+## [0.1.11] - 2026-09-23
+
+### Changed
+
+- Replaced the preview favicon with the tighter supplied FPL icon crop so the logo occupies more of the browser-tab icon area.
+- Preserved the favicon as a preview-only embedded image while leaving production untouched.
+
 ## [0.1.10] - 2026-09-23
 
 ### Added
