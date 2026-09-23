@@ -4,6 +4,16 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
+## [0.1.16] - 2026-09-23
+
+### Changed
+
+- Promoted the approved testimonial introduction from `index2.html` to the public page.
+- Promoted the approved top alignment for the success-stories introduction so it aligns with the first testimonial instead of the vertical centre of the full testimonial list.
+- Updated the production stylesheet cache version so the corrected alignment loads immediately.
+- Preserved public metadata, search-engine accessibility, and all preview-only controls.
+
+
 ## [0.1.15] - 2026-09-23
 
 ### Changed
