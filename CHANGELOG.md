@@ -4,6 +4,15 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
+## [0.1.12] - 2026-09-23
+
+### Changed
+
+- Promoted `info@fplearning.ca` to every public contact reference and inquiry-draft recipient.
+- Promoted the approved tight-crop FPL favicon to the public browser tab.
+- Added a production JavaScript cache version so the new inquiry recipient loads immediately.
+- Preserved public metadata and search-engine accessibility without transferring any preview-only controls.
+
 ## [0.1.11] - 2026-09-23
 
 ### Changed
