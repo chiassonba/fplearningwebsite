@@ -4,6 +4,17 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
+## [0.1.20] - 2026-09-23
+
+### Changed
+
+- Promoted the approved complete mobile navigation to the public page.
+- Kept Our approach, Testimonials, and Get in touch visible in a full-width mobile navigation row.
+- Preserved 44-pixel minimum touch targets for comfortable use on mobile screens.
+- Updated the production stylesheet cache version so the mobile navigation loads immediately.
+- Preserved public metadata and search-engine accessibility without transferring preview-only controls.
+
+
 ## [0.1.19] - 2026-09-23
 
 ### Changed
