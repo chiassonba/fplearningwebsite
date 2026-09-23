@@ -4,6 +4,16 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
+## [0.1.21] - 2026-09-23
+
+### Changed
+
+- Broadened the preview service-area heading from Canada alone to Canada and beyond.
+- Clarified that First Principles Learning occasionally supports students beyond Canada while preserving its Canadian ownership and operation message.
+- Kept the Canadian badge and all unrelated page content unchanged.
+- Left the production page unchanged pending explicit approval.
+
+
 ## [0.1.20] - 2026-09-23
 
 ### Changed
