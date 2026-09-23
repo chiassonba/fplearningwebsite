@@ -4,6 +4,14 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
+## [0.1.13] - 2026-09-23
+
+### Changed
+
+- Top-aligned the success-stories introduction with the first testimonial on desktop so the section is immediately recognizable.
+- Preserved the existing single-column mobile layout and all testimonial content and styling.
+- Updated the production stylesheet cache version so the alignment correction loads immediately.
+
 ## [0.1.12] - 2026-09-23
 
 ### Changed
