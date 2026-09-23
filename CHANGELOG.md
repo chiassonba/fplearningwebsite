@@ -4,6 +4,15 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
+## [0.1.18] - 2026-09-23
+
+### Changed
+
+- Promoted the approved testimonial order to the public page: Parent, Student, then Former Student.
+- Preserved all testimonial wording, attribution labels, names, credentials, and styling.
+- Preserved public metadata and search-engine accessibility without transferring preview-only controls.
+
+
 ## [0.1.17] - 2026-09-23
 
 ### Changed
