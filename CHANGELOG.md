@@ -4,6 +4,15 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
+## [0.1.17] - 2026-09-23
+
+### Changed
+
+- Reordered the preview testimonials by perspective: Parent, Student, then Former Student.
+- Kept the revised order confined to `index2.html` pending explicit approval.
+- Preserved all testimonial wording, attribution labels, names, credentials, and styling.
+
+
 ## [0.1.16] - 2026-09-23
 
 ### Changed
