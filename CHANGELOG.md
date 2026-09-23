@@ -4,6 +4,16 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
+## [0.1.15] - 2026-09-23
+
+### Changed
+
+- Reworked the preview testimonial introduction to represent feedback from parents, current students, and former students.
+- Kept the testimonial heading top-alignment proposal confined to `index2.html` and the preview stylesheet.
+- Verified that the preview retains all currently approved production content, including the favicon, domain email, experience statement, testimonial content, and inquiry behavior.
+- Left `index.html` and the production stylesheet unchanged pending explicit approval.
+
+
 ## [0.1.14] - 2026-09-23
 
 ### Fixed
