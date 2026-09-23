@@ -4,6 +4,16 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
+## [0.1.8] - 2026-09-23
+
+### Changed
+
+- Promoted the approved experience and family-history statement to the public hero section.
+- Promoted the approximately 25 percent smaller "There are no strings on me!" banner to production.
+- Promoted the Parent, Former Student, and Student testimonial perspective labels to the public site.
+- Updated the production stylesheet cache version so all approved refinements load immediately.
+- Preserved public metadata, search-engine accessibility, and testimonial privacy conventions.
+
 ## [0.1.7] - 2026-09-23
 
 ### Added
