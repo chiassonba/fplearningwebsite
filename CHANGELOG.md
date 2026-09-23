@@ -4,6 +4,13 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
+## [0.1.10] - 2026-09-23
+
+### Added
+
+- Added the supplied FPL dark icon as the preview page's browser-tab favicon.
+- Embedded the favicon directly in `index2.html` so production assets and `index.html` remain untouched during review.
+
 ## [0.1.9] - 2026-09-23
 
 ### Changed
