@@ -4,6 +4,15 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
+## [0.1.14] - 2026-09-23
+
+### Fixed
+
+- Restored the production testimonials section to its previously approved vertically centred alignment.
+- Moved the proposed top-aligned success-stories introduction to `index2.html` and the preview stylesheet for visual review only.
+- Updated both production and preview stylesheet cache versions so each page loads its intended layout immediately.
+
+
 ## [0.1.13] - 2026-09-23
 
 ### Changed
