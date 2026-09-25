@@ -15,6 +15,7 @@ inquiryForm?.addEventListener("submit", (event) => {
     ["Age", values.get("age")],
     ["Grade", values.get("grade")],
     ["Subject", values.get("subject")],
+    ["Referred by", values.get("referralName") || "Not provided"],
     ["Areas of difficulty", values.get("difficulty") || "Not provided"],
   ].map(([label, value]) => label + ": " + value).join("\n");
 
