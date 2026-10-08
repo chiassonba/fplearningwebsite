@@ -4,6 +4,14 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
+## [0.1.22] - 2026-10-08
+
+### Changed
+
+- Replaced the preview footer slogan “Learning with care.” with “Building Understanding. Developing Independence.”
+- Restricted the text change to the staging page `index2.html`; kept footer markup, layout, and all unrelated content unchanged.
+- Preserved the public production page `index.html` without modification.
+
 ## [0.1.21] - 2026-09-23
 
 ### Changed
