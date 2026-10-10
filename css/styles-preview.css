@@ -32,3 +32,7 @@ footer { border-top:1px solid var(--line); color:var(--white); font-size:.85rem;
 
 .opening-message + .hero { padding-top:6rem; min-height:0; }
 
+
+/* Keep the closing banner centred beneath both testimonial columns. */
+.success-stories > .break-free { grid-column:1 / -1; width:min(100%, 66.667vw); max-width:none; margin:0 auto; }
+@media (max-width:700px) { .success-stories > .break-free { width:100%; } }
