@@ -31,3 +31,8 @@ footer { border-top:1px solid var(--line); color:var(--white); font-size:.85rem;
 
 .opening-message + .hero { padding-top:6rem; min-height:0; }
 
+
+/* Display the supplied transparent master within the existing header dimensions. */
+.brand--transparent { position:relative; aspect-ratio:1623 / 480; overflow:hidden; }
+.brand--transparent img { position:absolute; left:-5.545287%; top:-43.75%; width:111.028959%; max-width:none; height:auto; }
+
