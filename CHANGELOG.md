@@ -4,6 +4,17 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
+## [0.1.24] - 2026-10-14
+
+### Changed
+
+- Promoted the approved intake-form section placement from staging to production `index.html`: testimonials now precede the parent inquiry form, which appears immediately before the service-area section.
+- Moved the existing production contact section intact; preserved all form fields, validation attributes, `#contact` anchor links, submission integration, recipient instructions, and testimonial contents.
+- Preserved production-only title, CSS and JavaScript references, metadata, and search-engine visibility; did not introduce preview banner or `noindex` controls.
+- Kept `index2.html` unchanged as the staging reference.
+- Verified unique form/contact anchors, two direct `#contact` links, expected section order, and balanced section tags.
+
+
 ## [0.1.23] - 2026-10-14
 
 ### Changed
