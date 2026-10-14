@@ -4,6 +4,17 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
+## [0.1.23] - 2026-10-14
+
+### Changed
+
+- Relocated the existing parent inquiry form on the staging page `index2.html` from above the testimonials to directly below the success stories and before the service-area section.
+- Preserved the form fields, required attributes, labels, input IDs, submission behavior, recipient email, explanatory note, and JavaScript integration without rewriting the form.
+- Retained the `#contact` anchor target used by the primary navigation and hero call-to-action, allowing visitors to jump directly to the form.
+- Preserved the parent, student, and former-student testimonials and their order, plus the preview banner and `noindex, nofollow` metadata.
+- Left the production page `index.html` and production assets unchanged, pending explicit approval.
+
+
 ## [0.1.22] - 2026-10-08
 
 ### Changed
