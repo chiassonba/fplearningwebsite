@@ -4,6 +4,24 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
+## [0.1.25] - 2026-10-15
+
+### Added
+
+- Created an independent, responsive FPL-branded administrative file library at `files.htm` using the existing navy/gold colour palette, FPL logo, favicon, and footer slogan.
+- Added recursively expandable and collapsible folder sections that discover new files and nested folders under `files/FPLFiles/` from the public GitHub tree API, with a manual refresh control.
+- Added appropriate download links for ordinary resources and open-in-new-tab links for `.htm`/`.html` mini-apps, including safe text-only rendering of repository filenames.
+- Published a `Brand/` example collection mirroring six existing FPL logo and favicon assets, reusing their original Git blob objects rather than generating or altering images.
+- Included accessible status messaging, mobile layout, and static fallback links for the six starter Brand assets if dynamic discovery fails.
+- Added `noindex, nofollow, noarchive` metadata and deliberately omitted any public homepage link or navigation promotion.
+- Documented how to add files/folders, how live discovery behaves, and why content must not contain sensitive information.
+
+### Verified
+
+- JavaScript parsed successfully; new CSS has balanced brace delimiters and matches production brand colours.
+- Existing production `index.html` and staging `index2.html` remain unchanged, and no installer was added.
+
+
 ## [0.1.24] - 2026-10-14
 
 ### Changed
