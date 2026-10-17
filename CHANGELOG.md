@@ -4,6 +4,14 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
+## [0.1.32] - 2026-10-17
+
+### Added
+
+- Added a 0-100% volume slider beside Spotify playback controls, with a live percentage display.
+- Removed the duplicate LCARS song-position slider in favor of the native Spotify player control. Kept the 15-second skip buttons.
+- Control the FP-LCARS player's volume through the SDK and other supported active devices through Spotify's volume API. Disable the slider when disconnected or when the device does not support volume control.
+
 ## [0.1.31] - 2026-10-17
 
 ### Changed

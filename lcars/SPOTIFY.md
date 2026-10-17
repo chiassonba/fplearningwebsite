@@ -12,7 +12,7 @@ The public Client ID supplied by Blair is configured in `spotify.js`. No client 
 2. Add exactly `https://fplearning.ca/lcars.html` to Redirect URIs.
 3. Add any additional permitted account under Users Management, within Spotify's development-mode limits.
 
-Open Subspace Media in LCARS, click Connect Spotify and approve access. Paste a track, album or playlist link above the controls. Choose Play here, then Play loaded link. Use the song position slider to seek, or the back/forward 15-second buttons. Previous/next and play/pause operate on the active Spotify device shown above the controls.
+Open Subspace Media in LCARS, click Connect Spotify and approve access. Paste a track, album or playlist link above the controls. Choose Play here, then Play loaded link. Use Spotify's built-in position control or the back/forward 15-second buttons. Adjust the active device's volume with the LCARS volume slider when that device supports it. Previous/next and play/pause operate on the active Spotify device shown above the controls.
 
 Play here explicitly transfers the account's player to FP-LCARS and stops the embedded preview. Playback is never started automatically on page load. Returning to Command Station keeps the connected player available in this tab. Closing or reloading the tab disconnects that playback device. Use Disconnect to clear this tab's sign-in session. Revoke app access in the Spotify account settings to invalidate the grant at Spotify.
 

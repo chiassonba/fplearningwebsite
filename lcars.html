@@ -9,7 +9,7 @@
   <link rel="icon" type="image/png" sizes="64x64" href="images/fpl-stamp-favicon-64.png?v=20261008">
   <link rel="stylesheet" href="lcars/lcars.css?v=0.1.30">
   <script src="lcars/station.js?v=0.1.30" defer></script>
-  <script src="lcars/spotify.js?v=0.1.30" defer></script>
+  <script src="lcars/spotify.js?v=0.1.32" defer></script>
 </head>
 <body>
   <a class="skip" href="#command">Skip to command input</a>
@@ -100,9 +100,10 @@
               <button type="button" class="pill blue" data-spotify="forward">FORWARD 15s</button>
               <button type="button" class="pill silver" data-spotify="next">NEXT</button>
             </div>
-            <label for="spotify-seek">SONG POSITION</label>
-            <div class="spotify-seek-row"><output id="spotify-position">0:00</output><input id="spotify-seek" type="range" min="0" max="1" value="0" step="1000" aria-label="Song position"><output id="spotify-duration">0:00</output></div>
           </fieldset>
+          <label for="spotify-volume">VOLUME</label>
+          <div class="spotify-seek-row"><input id="spotify-volume" type="range" min="0" max="100" value="50" step="1" aria-describedby="spotify-volume-hint" disabled><output id="spotify-volume-value" for="spotify-volume">50%</output></div>
+          <p id="spotify-volume-hint">Connect Spotify and start playback to adjust volume.</p>
         </section>
       </section>
     </main>
