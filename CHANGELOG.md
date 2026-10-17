@@ -4,6 +4,13 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
+## [0.1.44] - 2026-10-17
+
+### Changed
+
+- Remember Spotify authorization in this browser across tabs and restarts, migrate existing tab sessions, share updates and disconnects, and serialize token renewal across tabs. Temporary renewal failures retain authorization.
+- Confirmed the live LCARS page retains its noindex, nofollow, noarchive directive.
+
 ## [0.1.43] - 2026-10-17
 
 ### Changed
