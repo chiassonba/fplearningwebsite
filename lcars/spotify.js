@@ -28,6 +28,7 @@
     },backWindow);
   }
   let playlistKey='',playlistName='',playlistRows=[],playlistTotal=0,playlistLoading=false,playlistError='',playlistDenied=false,playlistVersion=0;
+  let renderedPlaylistRows;
   const message = value => { el('status').textContent = value; };
   const stored = (store, name) => { try { return JSON.parse(store.getItem(name)); } catch { return null; } };
   const saveSession = value => { session = value; if (value) sessionStorage.setItem(key, JSON.stringify(value)); else sessionStorage.removeItem(key); };
@@ -71,15 +72,27 @@
     el('playlist-title').textContent=playlistName||'APP PLAYBACK';
     const current=state?.item?.uri||`spotify:track:${state?.item?.id||''}`;
     const scroll=el('playlist-items').scrollTop;
-    el('playlist-items').replaceChildren();
-    playlistRows.forEach((row,index)=>{
+    if(renderedPlaylistRows!==playlistRows){
+      el('playlist-items').replaceChildren();
+      playlistRows.forEach((row,index)=>{
       const track=row?.item||row?.track,li=document.createElement('li');
       li.value=index+1;
       const name=document.createElement('span');name.textContent=track?.name||'Unavailable track';
       const artist=document.createElement('small');artist.textContent=(track?.artists||[]).map(a=>a.name).join(', ')||track?.show?.name||'';
       li.append(name,artist);
-      if(track&&(track.uri===current||track.id&&track.id===state?.item?.id))li.setAttribute('aria-current','true');
+      if(track&&!track.is_local&&track.is_playable!==false){
+        li.dataset.playlistIndex=index;li.dataset.playlistKey=playlistKey;li.tabIndex=0;li.setAttribute('role','button');
+        li.title='Double-click or press Enter to play in your Spotify app';
+        li.setAttribute('aria-label',`Play ${track.name} in Spotify. Double-click or press Enter.`);
+      }
       el('playlist-items').append(li);
+      });
+      renderedPlaylistRows=playlistRows;
+    }
+    Array.from(el('playlist-items').children).forEach((li,index)=>{
+      const row=playlistRows[index],track=row?.item||row?.track;
+      if(track&&(track.uri===current||track.id&&track.id===state?.item?.id))li.setAttribute('aria-current','true');
+      else li.removeAttribute('aria-current');
     });
     el('playlist-items').scrollTop=scroll;
     el('playlist-status').textContent=playlistLoading?'Loading playlist...':playlistError||(!playlistKey?'Spotify is not reporting a playlist for this track.':`${playlistRows.length} of ${playlistTotal} tracks`);
@@ -111,6 +124,20 @@
       playlistError='';playlistDenied=false;
     }catch(error){if(version===playlistVersion){playlistError=error.message;playlistDenied=!!error.denied;}}
     finally{if(version===playlistVersion){playlistLoading=false;renderPlaylist();}}
+  }
+  function playPlaylistRow(li){
+    const index=Number(li.dataset.playlistIndex),key=li.dataset.playlistKey;
+    const row=playlistRows[index],track=row?.item||row?.track;
+    if(key!==playlistKey||!Number.isInteger(index)||index<0||!track||track.is_local||track.is_playable===false)return;
+    void run(async()=>{
+      const target=selectedDevice||state?.device?.id;
+      if(!target||state?.device?.is_restricted)throw new Error('Select your Spotify app before playing a song.');
+      if(state?.actions?.disallows?.interrupting_playback)throw new Error('Spotify cannot change tracks during this playback.');
+      try{await api(`/play?device_id=${encodeURIComponent(target)}`,'PUT',{context_uri:`spotify:playlist:${key}`,offset:{position:index},position_ms:0});}
+      catch(error){el('playlist-status').textContent=error.message;throw error;}
+      state={...state,item:track,context:{...state?.context,uri:`spotify:playlist:${key}`},progress_ms:0,is_playing:true};updated=Date.now();draw();
+      message(`Playing ${track.name} in ${state.device?.name||'your Spotify app'}.`);
+    });
   }
   function drawMini() {
     const item=state?.item, allowed=state?.actions?.disallows||{};
@@ -333,6 +360,11 @@
   el('here').addEventListener('click', () => run(playHere));
   el('load').addEventListener('click', () => run(loadLink));
   el('playlist-more').addEventListener('click',()=>{void loadPlaylist();});
+  el('playlist-items').addEventListener('dblclick',event=>{const li=event.target.closest('li[data-playlist-index]');if(li)playPlaylistRow(li);});
+  el('playlist-items').addEventListener('keydown',event=>{
+    if(event.repeat||!['Enter',' '].includes(event.key))return;
+    const li=event.target.closest('li[data-playlist-index]');if(li){event.preventDefault();playPlaylistRow(li);}
+  });
   el('playlist-access').addEventListener('click',()=>run(authorize));
   el('refresh-devices').addEventListener('click',()=>run(refreshDevices));
   el('devices').addEventListener('change',()=>{el('use-device').disabled=!session||!devices.some(d=>d.id===el('devices').value&&!d.is_restricted);});

@@ -4,6 +4,13 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
+## [0.1.40] - 2026-10-17
+
+### Added
+
+- Double-click a song in the LCARS playlist to play it from the beginning in the selected Spotify app, preserving playlist context and its exact position. Enter/Space also activates a focused song.
+- Preserve playlist row elements across playback updates so polling cannot interrupt a double-click or keyboard focus. Exclude unavailable and local-only tracks.
+
 ## [0.1.39] - 2026-10-17
 
 ### Changed

@@ -25,7 +25,7 @@ The selected device ID/name is remembered locally, independently of sign-in toke
 
 ## App playlist view
 
-Subspace Media displays the app's reported playlist, the current song and a highlighted track in the list. Load more fetches another 50 entries. This view reads Spotify data without starting a second player. Shuffle toggles On/Off in the sidebar; Repeat cycles Off, All and One, skipping restricted modes.
+Subspace Media displays the app's reported playlist, the current song and a highlighted track in the list. Double-click a song (or focus it and press Enter/Space) to play that position in the playlist on the selected app. A single click does not start playback. Load more fetches another 50 entries. This view reads Spotify data without starting a second player. Shuffle toggles On/Off in the sidebar; Repeat cycles Off, All and One, skipping restricted modes.
 
 Spotify development-mode access may limit playlist items to playlists owned by the user or shared as a collaborator. Private playlists may require additional read permission. When denied without that permission, Allow playlist access opens Spotify's consent flow. Otherwise LCARS retains the current track and Open in Spotify link. Playlist permission failures do not disconnect app controls.
 
