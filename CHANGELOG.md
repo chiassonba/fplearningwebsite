@@ -4,6 +4,12 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
+## [0.1.42] - 2026-10-17
+
+### Changed
+
+- Reserve two lines for the Spotify sidebar song and artist so playback controls stay in place when track names change.
+
 ## [0.1.41] - 2026-10-17
 
 ### Changed
