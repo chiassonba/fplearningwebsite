@@ -4,6 +4,16 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
+## [0.1.29] - 2026-10-17
+
+### Changed
+
+- Unified the LCARS sidebar and screen tiles around one ordered link list, with identical names, URLs, numbering and open modes.
+- Included all six default links on both surfaces, including Subspace Media and FPLearning Interlink in the sixth position.
+- Replaced the old default LCARS Database/FPL Resources destination with FPLearning Interlink and kept the separate Command Station return control above the sidebar links.
+- Simplified Edit links so additions, removals, edits and ordering changes always apply to both views.
+- Migrated existing saved tiles in order and appended unique sidebar-only links, preserving the previous storage records for recovery.
+
 ## [0.1.28] - 2026-10-17
 
 ### Added

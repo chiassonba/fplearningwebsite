@@ -6,12 +6,6 @@ const defaults = [
   {name:'DATA ARCHIVES',url:'https://drive.google.com/'},
   {name:'ASTROMETRICS',url:'https://www.google.com/maps'},
   {name:'SUBSPACE MEDIA',url:'https://spotify.com/'},
-  {name:'FPL RESOURCES',url:'https://fplearning.ca/files.htm'}
-];
-const sidebarDefaults=[
-  {name:'COMMUNICATIONS',url:'https://mail.google.com/'},
-  {name:'CHRONOMETER',url:'https://calendar.google.com/'},
-  {name:'ARCHIVES',url:'https://drive.google.com/'},
   {name:'FPLearning Interlink',url:'https://fplearning.ca/'}
 ];
 function read(key,fallback){try{return JSON.parse(localStorage.getItem(key))??fallback;}catch{return fallback;}}
@@ -30,31 +24,27 @@ function destinationMode(d){
   const url=safeURL(d.url);
   return url&&(isSpotify(url)||url.origin===location.origin||['fplearning.ca','www.fplearning.ca'].includes(url.hostname))?'screen':'tab';
 }
-let saved=read('voyager.destinations',defaults);
 function validLinks(value){return Array.isArray(value)&&value.every(d=>d&&typeof d.name==='string'&&d.name.trim()&&safeURL(d.url));}
-let destinations=validLinks(saved)?saved:defaults.map(d=>({...d}));
-if(read('voyager.media-version',0)<2){
-  destinations=destinations.map(d=>d.name.trim().toUpperCase()==='SUBSPACE MEDIA'?{...d,url:'https://spotify.com/'}:d);
-  if(write('voyager.destinations',destinations))write('voyager.media-version',2);
+const savedShared=read('voyager.shared-links',null);
+let destinations;
+if(validLinks(savedShared))destinations=savedShared;
+else{
+  const stored=read('voyager.links',null),legacy=read('voyager.destinations',null);
+  const tiles=validLinks(stored?.destinations)?stored.destinations:validLinks(legacy)?legacy:defaults;
+  const sidebar=validLinks(stored?.sidebar)?stored.sidebar:[];
+  const upgrade=d=>{
+    const name=d.name.trim().toUpperCase(),url=new URL(d.url);
+    if((name==='LCARS DATABASE'&&['thelcars.com','www.thelcars.com'].includes(url.hostname))||(name==='FPL RESOURCES'&&url.hostname==='fplearning.ca'&&url.pathname==='/files.htm'))return {name:'FPLearning Interlink',url:'https://fplearning.ca/',mode:'screen'};
+    if(name==='SUBSPACE MEDIA'&&isSpotify(url)&&url.pathname==='/'&&read('voyager.spotify-version',0)<1)return {...d,mode:'screen'};
+    return {...d,mode:destinationMode(d)};
+  };
+  destinations=tiles.map(upgrade);
+  const seen=new Set(destinations.map(d=>new URL(d.url).href));
+  for(const link of sidebar.map(upgrade)){const key=new URL(link.url).href;if(!seen.has(key)){destinations.push(link);seen.add(key);}}
+  // Old records remain available for recovery. This shared list is now authoritative.
+  write('voyager.shared-links',destinations);
 }
-if(read('voyager.maps-version',0)<1){
-  destinations=destinations.map(d=>d.name.trim().toUpperCase()==='ASTROMETRICS'?{...d,url:'https://www.google.com/maps'}:d);
-  if(write('voyager.destinations',destinations))write('voyager.maps-version',1);
-}
-if(read('voyager.resources-version',0)<1){
-  destinations=destinations.map(d=>d.name.trim().toUpperCase()==='LCARS DATABASE'?{name:'FPL RESOURCES',url:'https://fplearning.ca/files.htm'}:d);
-  if(write('voyager.destinations',destinations))write('voyager.resources-version',1);
-}
-const storedLinks=read('voyager.links',null);
-if(storedLinks&&validLinks(storedLinks.destinations)&&validLinks(storedLinks.sidebar))destinations=storedLinks.destinations;
-let sidebarLinks=storedLinks&&validLinks(storedLinks.destinations)&&validLinks(storedLinks.sidebar)?storedLinks.sidebar:sidebarDefaults;
 destinations=destinations.map(d=>({...d,mode:destinationMode(d)}));
-sidebarLinks=sidebarLinks.map(d=>({...d,mode:destinationMode(d)}));
-if(read('voyager.spotify-version',0)<1){
-  const upgrade=d=>d.name.trim().toUpperCase()==='SUBSPACE MEDIA'&&isSpotify(new URL(d.url))&&new URL(d.url).pathname==='/'?{...d,mode:'screen'}:d;
-  destinations=destinations.map(upgrade);sidebarLinks=sidebarLinks.map(upgrade);
-  if(write('voyager.links',{destinations,sidebar:sidebarLinks}))write('voyager.spotify-version',1);
-}
 let screenTrigger;
 function showStation(){
   $('screen-frame').removeAttribute('src');
@@ -114,9 +104,9 @@ function chirp(kind='letter'){
 function render(){
   $('destinations').replaceChildren();
   $('sidebar-links').replaceChildren();
-  sidebarLinks.forEach((d,i)=>{
+  destinations.forEach((d,i)=>{
     const link=document.createElement('a');link.className=['peach','blue','silver','earth'][i%4];
-    prepareLink(link,d);link.textContent=`${String(i+2).padStart(2,'0')} / ${d.name}`;$('sidebar-links').append(link);
+    prepareLink(link,d);link.textContent=`${String(i+1).padStart(2,'0')} / ${d.name}`;$('sidebar-links').append(link);
   });
   destinations.forEach((d,i)=>{
     const a=document.createElement('a');a.className='destination';prepareLink(a,d);
@@ -154,15 +144,14 @@ $('command-form').addEventListener('submit',e=>{
   if(address){openScreen(address,new URL(address).hostname,$('command'));return;}
   const link=document.createElement('a');link.href=resolveCommand(q,$('engine').value);link.target='_blank';link.rel='noopener';link.click();
 });
-let editDrafts,editKind='destinations';
+let editDrafts;
 function captureDraft(){
   const data=new FormData($('edit-form'));
-  editDrafts[editKind]=editDrafts[editKind].map((d,i)=>({name:String(data.get(`name-${i}`)??''),url:String(data.get(`url-${i}`)??''),mode:data.get(`mode-${i}`)==='screen'?'screen':'tab'}));
+  editDrafts=editDrafts.map((d,i)=>({name:String(data.get(`name-${i}`)??''),url:String(data.get(`url-${i}`)??''),mode:data.get(`mode-${i}`)==='screen'?'screen':'tab'}));
 }
 function renderEditor(){
   $('edit-rows').replaceChildren();$('edit-error').textContent='';
-  $('edit-list').value=editKind;
-  editDrafts[editKind].forEach((d,i)=>{
+  editDrafts.forEach((d,i)=>{
     const row=document.createElement('div');row.className='edit-row';
     for(const [key,label]of [['name',`${i+1} / LABEL`],['url','WEBSITE ADDRESS']]){
       const l=document.createElement('label');l.textContent=label;
@@ -176,7 +165,7 @@ function renderEditor(){
     for(const [action,label]of [['up','Up'],['down','Down'],['remove','Remove']]){
       const button=document.createElement('button');button.type='button';button.textContent=label;
       button.setAttribute('aria-label',`${label} link ${i+1}`);button.dataset.action=action;button.dataset.index=String(i);
-      button.disabled=(action==='up'&&i===0)||(action==='down'&&i===editDrafts[editKind].length-1);
+      button.disabled=(action==='up'&&i===0)||(action==='down'&&i===editDrafts.length-1);
       actions.append(button);
     }
     row.append(actions);
@@ -184,17 +173,15 @@ function renderEditor(){
   });
 }
 $('edit').addEventListener('click',()=>{
-  editDrafts={destinations:destinations.map(d=>({...d})),sidebar:sidebarLinks.map(d=>({...d}))};
-  editKind='destinations';renderEditor();$('editor').showModal();
+  editDrafts=destinations.map(d=>({...d}));renderEditor();$('editor').showModal();
 });
-$('edit-list').addEventListener('change',()=>{captureDraft();editKind=$('edit-list').value;renderEditor();});
 $('add-link').addEventListener('click',()=>{
-  captureDraft();editDrafts[editKind].push({name:'',url:'https://',mode:'tab'});renderEditor();
+  captureDraft();editDrafts.push({name:'',url:'https://',mode:'tab'});renderEditor();
   $('edit-rows').lastElementChild.querySelector('input').focus();
 });
 $('edit-rows').addEventListener('click',e=>{
   const button=e.target.closest('button[data-action]');if(!button)return;
-  captureDraft();const i=Number(button.dataset.index),list=editDrafts[editKind];
+  captureDraft();const i=Number(button.dataset.index),list=editDrafts;
   if(button.dataset.action==='remove')list.splice(i,1);
   else{const target=i+(button.dataset.action==='up'?-1:1);if(target<0||target>=list.length)return;[list[i],list[target]]=[list[target],list[i]];}
   renderEditor();
@@ -202,11 +189,10 @@ $('edit-rows').addEventListener('click',e=>{
 $('close').addEventListener('click',()=>$('editor').close());
 $('edit-form').addEventListener('submit',e=>{
   e.preventDefault();captureDraft();
-  const next=Object.fromEntries(Object.entries(editDrafts).map(([kind,list])=>[kind,list.map(d=>({...d,name:d.name.trim(),url:d.url.trim()}))]));
-  const invalid=['destinations','sidebar'].find(kind=>!validLinks(next[kind]));
-  if(invalid){editKind=invalid;renderEditor();$('edit-error').textContent='ENTER A LABEL AND A VALID HTTP OR HTTPS ADDRESS FOR EVERY LINK.';return;}
-  if(!write('voyager.links',next)){$('edit-error').textContent='THIS BROWSER COULD NOT SAVE YOUR LINKS. CHECK LOCAL STORAGE SETTINGS.';return;}
-  destinations=next.destinations;sidebarLinks=next.sidebar;render();$('editor').close();
+  const next=editDrafts.map(d=>({...d,name:d.name.trim(),url:d.url.trim()}));
+  if(!validLinks(next)){$('edit-error').textContent='ENTER A LABEL AND A VALID HTTP OR HTTPS ADDRESS FOR EVERY LINK.';return;}
+  if(!write('voyager.shared-links',next)){$('edit-error').textContent='THIS BROWSER COULD NOT SAVE YOUR LINKS. CHECK LOCAL STORAGE SETTINGS.';return;}
+  destinations=next;render();$('editor').close();
 });
 function clock(){const d=new Date();$('clock').textContent=d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit',hour12:false});$('clock').dateTime=d.toISOString();$('date').textContent=d.toLocaleDateString([],{year:'numeric',month:'short',day:'2-digit'}).toUpperCase();}
 clock();let timer=setInterval(clock,30000);
