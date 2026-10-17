@@ -27,6 +27,7 @@
     syncTick();
   }
   function draw() {
+    document.body.classList.toggle('music-playing',!!session&&!!state?.is_playing);
     const item = state?.item, allowed = state?.actions?.disallows || {};
     el('transport').disabled = !session || !state?.device || state.device.is_restricted;
     el('toggle').textContent = state?.is_playing ? 'PAUSE' : 'PLAY';
