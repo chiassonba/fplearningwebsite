@@ -12,9 +12,16 @@ The public Client ID supplied by Blair is configured in `spotify.js`. No client 
 2. Add exactly `https://fplearning.ca/lcars.html` to Redirect URIs.
 3. Add any additional permitted account under Users Management, within Spotify's development-mode limits.
 
-Open Subspace Media in LCARS, click Connect Spotify and approve access. Paste a track, album or playlist link above the controls. Choose Play here, then Play loaded link. Use Spotify's built-in position control or the back/forward 15-second buttons. Adjust the active device's volume with the LCARS volume slider when that device supports it. Previous/next and play/pause operate on the active Spotify device shown above the controls.
+Open Subspace Media in LCARS, click Connect LCARS controls and approve access. Signing into Spotify's embed is separate from this authorization. Paste a track, album or playlist link above the controls. Choose Play here, then Play loaded link. Use Spotify's built-in position control or the back/forward 15-second buttons. Adjust the active device's volume with the LCARS volume slider when that device supports it. Previous/next and play/pause operate on the active Spotify device shown above the controls.
 
 Play here explicitly transfers the account's player to FP-LCARS and stops the embedded preview. Playback is never started automatically on page load. Returning to Command Station or opening another link inside FP-LCARS collapses Spotify to a bottom bar without removing, reparenting or reloading its iframe. Choose Open player to expand it. The Spotify sidebar entry shows the track, time remaining and previous/next, play/pause and stop controls. Stop pauses playback and returns to the beginning when seeking is allowed. Closing or reloading the tab disconnects that playback device. Use Disconnect to clear this tab's sign-in session. Revoke app access in the Spotify account settings to invalidate the grant at Spotify.
+
+
+## Control the Spotify app
+
+Open Spotify on your computer or phone with the same account. In Subspace Media, click Refresh devices, choose the app/device, then Control app. This explicitly transfers the account's playback device with playback paused and stops the independent embed. Click Play to resume the app's queue, or Play loaded link to play the pasted track or playlist in that app. The sidebar and volume controls target the selected app, even if another device was previously active.
+
+The selected device ID/name is remembered locally, independently of sign-in tokens. An offline or restricted device is not silently replaced with another device. Open the app, play a song once if needed, then refresh and select it again. Choose Play here only when you want the optional player inside LCARS instead.
 
 ## Storage and network behavior
 
@@ -25,6 +32,6 @@ Play here explicitly transfers the account's player to FP-LCARS and stops the em
 
 ## Validation
 
-Browser checks with mocked Spotify responses covered OAuth PKCE/state rejection, token exchange, seek boundaries, transport commands, SDK device transfer, loaded-link playback, unavailable devices, playback restrictions, retry delays, disconnect and mobile overflow. A persistent-player browser check also verified that a silent test audio stream keeps advancing inside the same iframe while navigating, collapsing and expanding, with no iframe reload. Sidebar transport, stop/reset, countdown and controls after link editing passed, along with volume regressions and mobile overflow checks. Native JavaScript syntax and whitespace checks passed. Actual account authorization and protected-media playback require confirmation using the configured Spotify account in Opera GX.
+Browser checks with mocked Spotify responses covered OAuth PKCE/state rejection, token exchange, seek boundaries, transport commands, SDK device transfer, loaded-link playback, unavailable devices, playback restrictions, retry delays, disconnect and mobile overflow. A persistent-player browser check also verified that a silent test audio stream keeps advancing inside the same iframe while navigating, collapsing and expanding, with no iframe reload. Sidebar transport, stop/reset, countdown and controls after link editing passed, along with volume regressions and mobile overflow checks. App-control browser checks covered restored connection status, discovery and explicit handoff, resume without a current track, targeted app commands and metadata, remembered selection, isolation from another active device, offline/disconnected behavior and mobile layout. Native JavaScript syntax and whitespace checks passed. Actual account authorization and protected-media playback require confirmation using the configured Spotify account in Opera GX.
 
 References: [PKCE](https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow), [Web Playback SDK](https://developer.spotify.com/documentation/web-playback-sdk/tutorials/getting-started), [seek controls](https://developer.spotify.com/documentation/web-api/reference/seek-to-position-in-currently-playing-track), [embed troubleshooting](https://developer.spotify.com/documentation/embeds/tutorials/troubleshooting).

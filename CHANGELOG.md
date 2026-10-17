@@ -4,6 +4,19 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
+## [0.1.35] - 2026-10-17
+
+### Added
+
+- Added Spotify app/device discovery, Refresh devices, Control app and Open Spotify app actions. LCARS can now act as a remote for the desktop or phone app.
+- Remember the selected device and target playback, skipping, stop/reset, loaded links and volume commands to it. Keep track details scoped to that device.
+
+### Fixed
+
+- Initialize the sidebar from the existing LCARS authorization instead of leaving its initial connection message in place.
+- Distinguish LCARS authorization from the embed's separate Spotify sign-in. Show the same control-connection state on the sidebar and media screen.
+- Stop the independent embed after a successful user-requested app handoff, and explain missing/offline devices beside the app selector.
+
 ## [0.1.34] - 2026-10-17
 
 ### Changed
