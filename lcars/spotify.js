@@ -5,7 +5,7 @@
   const redirect = `${location.origin}${location.pathname}`;
   const key = 'fpl.spotify.session', pendingKey = 'fpl.spotify.pending';
   const scopes = 'streaming user-read-email user-read-private user-read-playback-state user-modify-playback-state';
-  let session = null, state = null, updated = 0, timer, busy = false, refreshTask, player, deviceId, sdkTask, cooldown = 0;
+  let session = null, state = null, updated = 0, timer, tick, busy = false, polling = false, revision = 0, refreshTask, player, deviceId, sdkTask, cooldown = 0;
   const message = value => { el('status').textContent = value; };
   const stored = (store, name) => { try { return JSON.parse(store.getItem(name)); } catch { return null; } };
   const saveSession = value => { session = value; if (value) sessionStorage.setItem(key, JSON.stringify(value)); else sessionStorage.removeItem(key); };
@@ -18,6 +18,7 @@
     el('disconnect').hidden = !yes; el('here').disabled = !yes; el('load').disabled = !yes;
     el('setup').open = !el('client').value; el('connect').hidden = yes;
     if (!yes) { state = null; draw(); }
+    syncTick();
   }
   function draw() {
     const item = state?.item, allowed = state?.actions?.disallows || {};
@@ -26,9 +27,25 @@
     el('now').textContent = item ? `${item.name} / ${(item.artists || []).map(a => a.name).join(', ') || item.show?.name || 'Spotify'}` : 'NOT PLAYING';
     el('now').href = item?.external_urls?.spotify || 'https://open.spotify.com/';
     el('device').textContent = state?.device ? `ACTIVE DEVICE: ${state.device.name}` : 'Start Spotify on a device, or choose Play here.';
-    const restrictions = { previous: 'skipping_prev', next: 'skipping_next', back: 'seeking', forward: 'seeking', toggle: state?.is_playing ? 'pausing' : 'resuming' };
-    document.querySelectorAll('[data-spotify]').forEach(b => { b.disabled = !!allowed[restrictions[b.dataset.spotify]]; });
+    drawMini();
     drawVolume();
+  }
+  function drawMini() {
+    const item=state?.item, allowed=state?.actions?.disallows||{};
+    const title=item ? `${item.name} / ${(item.artists||[]).map(a=>a.name).join(', ')||item.show?.name||'Spotify'}` : 'SUBSPACE MEDIA';
+    const remaining=item ? `${time(Math.max(0,item.duration_ms-position()))} LEFT${state.is_playing?'':' / PAUSED'}` : session?'Choose a track in Spotify':'Connect Spotify for controls';
+    document.querySelectorAll('[data-spotify-track]').forEach(node=>{node.textContent=title;node.title=title;});
+    document.querySelectorAll('[data-spotify-remaining]').forEach(node=>{node.textContent=remaining;});
+    const restrictions={previous:'skipping_prev',next:'skipping_next',back:'seeking',forward:'seeking',toggle:state?.is_playing?'pausing':'resuming',stop:'pausing'};
+    document.querySelectorAll('[data-spotify]').forEach(button=>{
+      const action=button.dataset.spotify;
+      button.disabled=!session||!item||!!state?.device?.is_restricted||!!allowed[restrictions[action]];
+      if(action==='toggle'){button.textContent=state?.is_playing?'PAUSE':'PLAY';button.setAttribute('aria-label',state?.is_playing?'Pause playback':'Play playback');}
+    });
+  }
+  function syncTick() {
+    clearInterval(tick);
+    if(session&&visible())tick=setInterval(drawMini,1000);
   }
   function drawVolume() {
     const device = state?.device;
@@ -68,29 +85,32 @@
     if (!response.ok) throw new Error(`Spotify could not complete the request (${response.status}). Try again.`);
     return response.status === 204 ? null : response.json();
   }
-  function visible() { return !document.hidden && !el('playback').hidden; }
-  function schedule() {
+  function visible() { return !document.hidden && !el('panel').hidden; }
+  function schedule(delay=5000) {
     clearTimeout(timer);
-    if (session && visible()) timer = setTimeout(poll, Math.max(5000, cooldown - Date.now()));
+    if (session && visible()) timer = setTimeout(poll, Math.max(delay, cooldown - Date.now()));
+    syncTick();
   }
   async function poll() {
-    if (!session || !visible() || busy) return;
-    busy = true;
+    if (!session || !visible() || busy || polling) return;
+    polling = true;const before=session, version=revision;
     try {
-      state = await api(''); updated = Date.now(); draw();
-      message(state?.item ? 'Connected. Drag the position slider to jump within the song.' : 'Connected. Choose Play here, or start Spotify on another device.');
+      const next=await api('');if(session!==before||version!==revision)return;
+      state = next; updated = Date.now(); draw();
+      message(state?.item ? 'Connected. Playback continues while you navigate LCARS.' : 'Connected. Choose Play here, or start Spotify on another device.');
     } catch (error) { message(error.message); }
-    finally { busy = false; schedule(); }
+    finally { polling = false; schedule(); }
   }
   async function run(task) {
     if (busy) { message('Spotify is handling another request. Try again in a moment.'); return; }
-    busy = true; clearTimeout(timer);
+    busy = true; revision++; clearTimeout(timer);
     try { await task(); }
     catch (error) { message(error.message); }
-    finally { busy = false; schedule(); }
+    finally { busy = false; schedule(400); }
   }
   function disconnect() {
-    clearTimeout(timer); player?.disconnect(); player = null; deviceId = null;
+    clearTimeout(timer);clearInterval(tick);revision++; player?.disconnect(); player = null; deviceId = null;
+    delete el('panel').dataset.fullPlayer;
     saveSession(null); sessionStorage.removeItem(pendingKey); connected(); message('Disconnected from LCARS. You can also revoke access in your Spotify account.');
   }
   async function authorize() {
@@ -147,9 +167,9 @@
     if (!deviceId) { player.disconnect(); player = null; return playHere(); }
     await player.activateElement();
     // Stop the preview before transferring the full player into LCARS.
-    document.getElementById('screen-frame').removeAttribute('src');
-    document.getElementById('screen-frame').hidden = true;
+    el('frame').removeAttribute('src');el('frame').hidden = true;
     await api('', 'PUT', { device_ids: [deviceId], play: false });
+    el('panel').dataset.fullPlayer='true';
     state = null; draw(); message('FP-LCARS is ready. Click Play loaded link to start your selection.');
   }
   async function loadLink() {
@@ -183,27 +203,35 @@
     else await api(`/volume?volume_percent=${value}${device.id ? `&device_id=${encodeURIComponent(device.id)}` : ''}`, 'PUT');
     device.volume_percent = value; drawVolume(); message(`Volume: ${value}%`);
   }));
-  document.querySelectorAll('[data-spotify]').forEach(button => button.addEventListener('click', () => run(async () => {
+  document.addEventListener('click', event => {
+    const button=event.target.closest('button[data-spotify]');if(!button||button.disabled)return;
+    void run(async () => {
     const action = button.dataset.spotify;
     if (['back', 'forward'].includes(action)) return seek(position() + (action === 'back' ? -15000 : 15000));
+    if(action==='stop'){
+      await api('/pause','PUT');
+      if(state){state.progress_ms=position();state.is_playing=false;updated=Date.now();draw();if(!state.actions?.disallows?.seeking)await seek(0);}
+      message('Playback stopped.');return;
+    }
     if (action === 'toggle') { await api(state?.is_playing ? '/pause' : '/play', 'PUT'); if (state) { state.progress_ms = position(); state.is_playing = !state.is_playing; updated = Date.now(); draw(); } }
     else await api(`/${action}`, 'POST');
     message('Playback updated.');
-  })));
-  const observer = new MutationObserver(() => { clearTimeout(timer); if (visible()) void poll(); });
-  observer.observe(el('playback'), { attributes: true, attributeFilter: ['hidden'] });
-  document.addEventListener('visibilitychange', () => { clearTimeout(timer); if (visible()) void poll(); });
-  window.addEventListener('pagehide', () => { clearTimeout(timer); player?.disconnect(); });
+    });
+  });
+  const viewChanged=()=>{clearTimeout(timer);syncTick();drawMini();if(visible())void poll();};
+  const observer = new MutationObserver(viewChanged);
+  observer.observe(el('panel'), { attributes: true, attributeFilter: ['hidden'] });
+  document.addEventListener('spotify-view-change',viewChanged);
+  document.addEventListener('spotify-links-rendered',drawMini);
+  document.addEventListener('visibilitychange',viewChanged);
+  window.addEventListener('pagehide', () => { clearTimeout(timer);clearInterval(tick); player?.disconnect(); });
   connected();
   callback().then(returned => {
     connected();
     if (returned) {
-      document.getElementById('command-station').hidden = true; document.getElementById('embedded-screen').hidden = false;
-      document.getElementById('spotify-form').hidden = false; el('playback').hidden = false;
-      document.getElementById('screen-title').textContent = 'SUBSPACE MEDIA';
-      document.getElementById('screen-external').href = 'https://open.spotify.com/';
       try { el('link').value = JSON.parse(localStorage.getItem('voyager.spotify-player')) || ''; } catch { /* An empty link is fine. */ }
+      openSpotify();
       void poll();
     }
-  }).catch(error => { connected(); el('playback').hidden = false; document.getElementById('command-station').hidden = true; document.getElementById('embedded-screen').hidden = false; message(error.message); });
+  }).catch(error => { connected();openSpotify();message(error.message); });
 })();

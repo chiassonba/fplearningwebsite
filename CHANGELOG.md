@@ -4,6 +4,19 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
+## [0.1.33] - 2026-10-17
+
+### Added
+
+- Added a persistent Spotify panel that collapses to a bottom bar while navigating elsewhere inside FP-LCARS, with an Open player control.
+- Added current track, time remaining, previous/next, play/pause and stop controls beneath each Spotify sidebar link. Stop pauses and returns to the beginning when seeking is supported.
+
+### Changed
+
+- Separated Spotify's iframe from other embedded websites so navigation and expanding/collapsing do not reload the player or change its source.
+- Kept connected playback state synchronized while the player is docked, with a local countdown updated once per second and no additional API polling for countdown ticks.
+- Preserved volume controls, ordered links and saved player settings. Sidebar controls continue working after editing or reordering links.
+
 ## [0.1.32] - 2026-10-17
 
 ### Added
