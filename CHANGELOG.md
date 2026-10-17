@@ -4,6 +4,20 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
+## [0.1.30] - 2026-10-17
+
+### Added
+
+- Added optional personal Spotify connection using OAuth PKCE, with no client secret, and a full Web Playback SDK player named FP-LCARS.
+- Added song position seeking, 15-second jumps, previous/next, play/pause, active device display, and playback of the loaded Spotify link.
+- Added setup instructions and actionable messages for previews, missing devices, blocked playback, expired sign-in and Spotify rate limits.
+- Kept public Client IDs in local browser storage and sign-in tokens in tab session storage. Disconnect clears the local sign-in session.
+
+### Changed
+
+- Matched Spotify's standard iframe configuration while retaining the sandbox for other embedded sites. Full playback still depends on Spotify sign-in, Premium and browser protected-content support.
+- Load Spotify's playback SDK only when Play here is requested, and poll playback only while the media panel and tab are visible.
+
 ## [0.1.29] - 2026-10-17
 
 ### Changed

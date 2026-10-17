@@ -7,8 +7,9 @@
   <meta name="robots" content="noindex, nofollow, noarchive">
   <link rel="icon" type="image/png" sizes="32x32" href="images/fpl-stamp-favicon-32.png?v=20261008">
   <link rel="icon" type="image/png" sizes="64x64" href="images/fpl-stamp-favicon-64.png?v=20261008">
-  <link rel="stylesheet" href="lcars/lcars.css?v=0.1.29">
-  <script src="lcars/station.js?v=0.1.29" defer></script>
+  <link rel="stylesheet" href="lcars/lcars.css?v=0.1.30">
+  <script src="lcars/station.js?v=0.1.30" defer></script>
+  <script src="lcars/spotify.js?v=0.1.30" defer></script>
 </head>
 <body>
   <a class="skip" href="#command">Skip to command input</a>
@@ -71,6 +72,37 @@
           <div class="spotify-input-row"><input id="spotify-link" type="url" placeholder="https://open.spotify.com/playlist/..." aria-label="Spotify content link" required><button type="submit" class="pill gold">LOAD PLAYER</button></div>
           <p id="spotify-error" role="alert"></p>
         </form>
+        <section id="spotify-playback" class="spotify-controls" aria-label="Spotify playback" hidden>
+          <p>Only hearing 30 seconds? The embed may be playing a preview. Sign in at <a href="https://open.spotify.com/" target="_blank" rel="noopener">Spotify</a> in this browser, then reload the player. Full LCARS playback below requires Spotify Premium.</p>
+          <details id="spotify-setup">
+            <summary>SPOTIFY CONNECTION SETTINGS</summary>
+            <p>Create a personal app in the <a href="https://developer.spotify.com/dashboard" target="_blank" rel="noopener">Spotify developer dashboard</a>. Select Web API and Web Playback SDK. Add this exact redirect address: <code id="spotify-redirect"></code>. If using another account, add it under Users Management.</p>
+            <label for="spotify-client">SPOTIFY CLIENT ID</label>
+            <div class="spotify-input-row"><input id="spotify-client" autocomplete="off" spellcheck="false" placeholder="Public Client ID, never a client secret"></div>
+            <p>Your Client ID is remembered on this browser. Sign-in tokens stay in this tab's session.</p>
+          </details>
+          <div class="spotify-input-row">
+            <button id="spotify-connect" type="button" class="pill gold">CONNECT SPOTIFY</button>
+            <button id="spotify-here" type="button" class="pill gold" disabled>PLAY HERE</button>
+            <button id="spotify-load" type="button" class="pill blue" disabled>PLAY LOADED LINK</button>
+            <button id="spotify-disconnect" type="button" class="pill silver" hidden>DISCONNECT</button>
+          </div>
+          <p id="spotify-status" role="status">Connect Spotify to use full playback and seeking.</p>
+          <a id="spotify-now" href="https://open.spotify.com/" target="_blank" rel="noopener">NOT PLAYING</a>
+          <p id="spotify-device">Controls apply to your active Spotify device. Use Play here to listen in LCARS.</p>
+          <fieldset id="spotify-transport" disabled>
+            <legend class="sr-only">Playback controls</legend>
+            <div class="spotify-buttons">
+              <button type="button" class="pill silver" data-spotify="previous">PREVIOUS</button>
+              <button type="button" class="pill blue" data-spotify="back">BACK 15s</button>
+              <button id="spotify-toggle" type="button" class="pill gold" data-spotify="toggle">PLAY</button>
+              <button type="button" class="pill blue" data-spotify="forward">FORWARD 15s</button>
+              <button type="button" class="pill silver" data-spotify="next">NEXT</button>
+            </div>
+            <label for="spotify-seek">SONG POSITION</label>
+            <div class="spotify-seek-row"><output id="spotify-position">0:00</output><input id="spotify-seek" type="range" min="0" max="1" value="0" step="1000" aria-label="Song position"><output id="spotify-duration">0:00</output></div>
+          </fieldset>
+        </section>
         <iframe id="screen-frame" title="LCARS embedded content" referrerpolicy="strict-origin-when-cross-origin" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" allowfullscreen sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-downloads"></iframe>
       </section>
     </main>
