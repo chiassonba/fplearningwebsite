@@ -4,6 +4,15 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
+## [0.1.28] - 2026-10-17
+
+### Added
+
+- Added an in-screen Spotify player panel for Subspace Media, with a share-link input and a remembered local selection.
+- Converted supported Spotify playlist, album, track, artist, show and episode links to official embed URLs for typed addresses and in-screen saved links.
+- Enabled the iframe playback permissions documented by Spotify and preserved the Open in new tab fallback without adding a player SDK, account connection or API key.
+- Upgraded the original Subspace Media root link to screen mode without replacing custom link destinations.
+
 ## [0.1.27] - 2026-10-17
 
 ### Added
