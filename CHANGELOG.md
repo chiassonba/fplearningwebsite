@@ -4,6 +4,17 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
+## [0.1.27] - 2026-10-17
+
+### Added
+
+- Added an embedded content screen inside the LCARS frame, with Command Station and open-in-new-tab controls.
+- Opened FPL Resources and FPLearning Interlink in the screen by default, while external service links open in separate tabs.
+- Added a link editor for both sidebar links and saved-coordinate tiles, with add, remove, up/down ordering and persistent screen/new-tab choices.
+- Preserved existing saved labels and addresses, supported variable-length link lists, and saved both lists atomically in one browser-local record.
+- Routed typed website addresses into the screen and kept text searches in a new tab because Google.ca blocks cross-origin embedding.
+- Kept modified-click link behaviour and provided a visible escape to a new tab for sites that reject embedding.
+
 ## [0.1.26] - 2026-10-17
 
 ### Added
