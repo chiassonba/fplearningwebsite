@@ -21,23 +21,21 @@
         <div class="matrix" aria-hidden="true"><span>47 0024 74656 1701 0830</span><span>58 3509 10247 0394 2247</span><span>69 0411 54009 2187 0918</span><span>70 8912 84720 4721 1640</span></div>
         <div class="clock-block"><span>LOCAL TIME</span><time id="clock">00:00</time></div>
         <button id="sound" class="pill gold" aria-pressed="false" title="Page sounds only. Browser-wide chirps are controlled in GX settings.">PAGE CHIRPS: OFF</button>
-        <button id="edit" class="pill peach">EDIT DESTINATIONS</button>
+        <button id="edit" class="pill peach">EDIT LINKS</button>
       </div>
     </div>
   </header>
   <div class="separator" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
   <div class="lower-shell">
     <aside class="rail">
-      <a class="rail-cap" href="#command">01 / NAVIGATION</a>
-      <a href="https://mail.google.com/" class="peach">02 / COMMUNICATIONS</a>
-      <a href="https://calendar.google.com/" class="blue">03 / CHRONOMETER</a>
-      <a href="https://drive.google.com/" class="silver">04 / ARCHIVES</a>
-      <a href="https://fplearning.ca/" class="earth">05 / FPLearning Interlink</a>
+      <a class="rail-cap" id="navigation-home" href="#command">01 / NAVIGATION</a>
+      <div id="sidebar-links" class="sidebar-links"></div>
       <div class="rail-fill"><span>ACCESS<br>47-ALPHA</span></div>
       <div class="rail-end">74656 / TERMINAL 01</div>
     </aside>
     <main>
       <div class="section-band"><span>PERSONAL ACCESS TERMINAL</span><span>01-047</span></div>
+      <div id="command-station">
       <section class="command-section">
         <div class="eyebrow"><span class="indicator"></span> AWAITING YOUR COMMAND</div>
         <h2>Search</h2>
@@ -48,7 +46,7 @@
           <select id="engine"><option value="google">GOOGLE.CA</option><option value="duckduckgo">DUCKDUCKGO</option><option value="bing">BING</option></select>
           <button class="pill gold" type="submit">ENGAGE <span aria-hidden="true">↗</span></button>
         </form>
-        <p class="input-hint">ENTER A DESTINATION OR SEARCH QUERY. PRESS ENTER TO ENGAGE.</p>
+        <p class="input-hint">ADDRESSES OPEN IN THE LCARS SCREEN. WEB SEARCH OPENS IN A NEW TAB.</p>
       </section>
       <section class="destinations" aria-labelledby="dest-title">
         <div class="section-label"><h3 id="dest-title">SAVED COORDINATES</h3><span>PERSONAL NAVIGATION</span></div>
@@ -59,16 +57,29 @@
         <div class="system-readout"><div><span>INTERFACE</span><span>LCARS / FPLearning</span></div><div><span>TERMINAL STORAGE</span><span id="storage-status">LOCAL ONLY</span></div><div><span>NETWORK ACTIVITY</span><span>ON NAVIGATION ONLY</span></div><div><span>VISUAL MODE</span><span>STATIC / LOW POWER</span></div></div>
       </section>
       <footer><span>LCARS 47 • PERSONAL TERMINAL</span><a href="https://www.thelcars.com/themes/voyager.html">PALETTE REFERENCE: THELCARS.COM</a></footer>
+      </div>
+      <section id="embedded-screen" class="embedded-screen" aria-labelledby="screen-title" hidden>
+        <div class="screen-toolbar">
+          <button type="button" id="screen-home" class="pill gold">COMMAND STATION</button>
+          <h2 id="screen-title" tabindex="-1">FPL Resources</h2>
+          <a id="screen-external" class="pill peach" target="_blank" rel="noopener">OPEN IN NEW TAB ↗</a>
+        </div>
+        <p class="screen-hint">If a page cannot display here, use Open in new tab.</p>
+        <iframe id="screen-frame" title="LCARS embedded content" referrerpolicy="strict-origin-when-cross-origin" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-downloads"></iframe>
+      </section>
     </main>
   </div>
   <div class="bottom-band" aria-hidden="true"><i></i><i></i><i></i></div>
   <dialog id="editor">
     <form id="edit-form">
-      <div class="section-label"><h2>DESTINATION CONTROL</h2><button type="button" id="close" class="close" aria-label="Close destination editor">✕</button></div>
-      <p>Choose six destinations. Use full https:// or http:// addresses.</p>
+      <div class="section-label"><h2>LINK CONTROL</h2><button type="button" id="close" class="close" aria-label="Close link editor">✕</button></div>
+      <label class="edit-list-label" for="edit-list">EDIT WHICH LINKS?</label>
+      <select id="edit-list"><option value="destinations">Saved coordinates</option><option value="sidebar">Sidebar links</option></select>
+      <p>Add or remove links, move them up or down, and choose where they open. Use full https:// or http:// addresses. The LCARS screen works only with pages that allow embedding.</p>
       <div id="edit-rows"></div>
+      <button type="button" id="add-link" class="pill silver">ADD LINK</button>
       <p id="edit-error" role="alert"></p>
-      <button type="submit" class="pill gold">SAVE COORDINATES</button>
+      <button type="submit" class="pill gold">SAVE LINKS</button>
     </form>
   </dialog>
 </body>
