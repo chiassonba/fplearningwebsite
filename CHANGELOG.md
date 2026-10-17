@@ -4,6 +4,15 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
+## [0.1.41] - 2026-10-17
+
+### Changed
+
+- Check Spotify as soon as LCARS loads with an existing authorization, so the sidebar no longer waits for Subspace Media to open.
+- Automatically attach to a saved/available desktop app, while retaining an already playing device without a transfer or pause. Manual device choices still take precedence after startup.
+- Keep automatic checks active on the visible LCARS page, but load playlist data only when the media view is open.
+- Place Launch Spotify App prominently at the top of Subspace Media using Spotify's registered app link. No helper service or automatic app launch.
+
 ## [0.1.40] - 2026-10-17
 
 ### Added

@@ -7,6 +7,7 @@
   const scopes = 'streaming user-read-email user-read-private user-read-playback-state user-modify-playback-state playlist-read-private playlist-read-collaborative';
   let session = null, state = null, updated = 0, timer, tick, busy = false, polling = false, revision = 0, refreshTask, player, deviceId, sdkTask, cooldown = 0;
   let devices=[], selectedDevice='', lastDeviceRefresh=0;
+  let autoAttached=false;
   let backTimer,backTrack='';
   const backWindow=500;
   const currentTrackKey=()=>JSON.stringify([selectedDevice||state?.device?.id,state?.item?.id||state?.item?.uri||state?.item?.name]);
@@ -44,7 +45,7 @@
     el('refresh-devices').disabled=!yes;
     el('devices').disabled=!yes;
     draw();renderDevices();
-    message(yes?'LCARS controls are connected. Open Spotify and select the app you want to control.':'Connect LCARS controls to control your app. Signing into the embedded player alone does not authorize these controls.');
+    message(yes?'LCARS controls are connected. Checking your Spotify app.':'Connect LCARS controls to control your app. Signing into the embedded player alone does not authorize these controls.');
     syncTick();
   }
   function draw() {
@@ -105,7 +106,7 @@
     el('app-track').textContent=`${state.is_playing?'PLAYING':'PAUSED'} IN ${state.device?.name||'SPOTIFY'}: ${state.item.name} / ${(state.item.artists||[]).map(a=>a.name).join(', ')||state.item.show?.name||''}`;
     const match=state.context?.uri?.match(/^spotify:playlist:([A-Za-z0-9]{22})$/),key=match?.[1]||'';
     el('playlist-open').href=key?`https://open.spotify.com/playlist/${key}`:state.item.external_urls?.spotify||`https://open.spotify.com/track/${state.item.id||''}`;
-    if(el('panel').classList.contains('is-background'))return;
+    if(el('panel').hidden||el('panel').classList.contains('is-background'))return;
     if(key!==playlistKey){playlistVersion++;playlistKey=key;playlistRows=[];playlistName='';playlistTotal=0;playlistError='';playlistDenied=false;playlistLoading=false;if(key)void loadPlaylist(true);}
     renderPlaylist();
   }
@@ -142,7 +143,7 @@
   function drawMini() {
     const item=state?.item, allowed=state?.actions?.disallows||{};
     const title=item ? `${item.name} / ${(item.artists||[]).map(a=>a.name).join(', ')||item.show?.name||'Spotify'}` : 'SUBSPACE MEDIA';
-    const remaining=item ? `${time(Math.max(0,item.duration_ms-position()))} LEFT${state.is_playing?'':' / PAUSED'}` : session?'Select your Spotify app':'Connect LCARS controls';
+    const remaining=item ? `${time(Math.max(0,item.duration_ms-position()))} LEFT${state.is_playing?'':' / PAUSED'}` : session?(state?.device?`READY / ${state.device.name}`:'WAITING FOR SPOTIFY APP'):'Connect LCARS controls';
     document.querySelectorAll('[data-spotify-track]').forEach(node=>{node.textContent=title;node.title=title;});
     document.querySelectorAll('[data-spotify-remaining]').forEach(node=>{node.textContent=remaining;});
     document.querySelectorAll('[data-spotify-connection]').forEach(node=>{node.textContent=session?'LCARS controls: connected':'LCARS controls: not connected';});
@@ -215,7 +216,7 @@
     el('devices').replaceChildren(new Option(devices.length?'Choose Spotify app / device':'No devices found. Open Spotify and refresh.',''));
     for(const device of devices){const option=new Option(`${device.name}${device.is_active?' / ACTIVE':''}${device.is_restricted?' / UNAVAILABLE':''}`,device.id);option.disabled=!!device.is_restricted;el('devices').append(option);}
     if(devices.some(d=>d.id===previous))el('devices').value=previous;
-    else el('devices').value=devices.find(d=>d.is_active&&!d.is_restricted)?.id||devices.find(d=>d.type==='Computer'&&!d.is_restricted)?.id||'';
+    else el('devices').value=devices.find(d=>d.is_active&&!d.is_restricted)?.id||devices.find(d=>d.type?.toLowerCase()==='computer'&&!d.is_restricted)?.id||'';
     el('use-device').disabled=!session||!devices.some(d=>d.id===el('devices').value&&!d.is_restricted);
   }
   async function refreshDevices(){
@@ -229,6 +230,7 @@
     if(!device)throw new Error('Open Spotify and choose an available app first.');
     await api('','PUT',{device_ids:[device.id],play:false});
     selectedDevice=device.id;
+    autoAttached=true;
     try{localStorage.setItem('fpl.spotify.device',JSON.stringify({id:device.id,name:device.name}));}catch{/* The selection still works for this page. */}
     if(player&&deviceId!==selectedDevice){player.disconnect();player=null;deviceId=null;}
     el('frame').removeAttribute('src');el('frame').hidden=true;el('panel').dataset.fullPlayer='true';
@@ -236,7 +238,25 @@
     message(`Controlling ${device.name}. Press Play to resume its music, or Play loaded link to send your selection to the app.`);
     el('device-help').textContent=`Playback is in ${device.name}. Use the sidebar to control it.`;
   }
-  function visible() { return !document.hidden && !el('panel').hidden; }
+  async function attachDefault(next){
+    if(autoAttached)return next;
+    const available=devices.filter(d=>!d.is_restricted);
+    const active=(next?.is_playing&&next.device&&!next.device.is_restricted&&next.device)||available.find(d=>d.id===next?.device?.id)||available.find(d=>d.is_active);
+    const computer=d=>d?.type?.toLowerCase()==='computer';
+    const saved=available.find(d=>d.id===selectedDevice);
+    const chosen=(next?.is_playing&&active)||(computer(saved)&&saved)||(computer(active)&&active)||available.find(computer)||saved||active;
+    if(!chosen)return next;
+    if(next?.device?.id!==chosen.id){
+      await api('','PUT',{device_ids:[chosen.id],play:false});
+      next=await api('');
+    }
+    selectedDevice=chosen.id;autoAttached=true;
+    if(computer(chosen)){try{localStorage.setItem('fpl.spotify.device',JSON.stringify({id:chosen.id,name:chosen.name}));}catch{/* Optional preference. */}}
+    el('panel').dataset.fullPlayer='true';renderDevices();
+    el('device-help').textContent=`Automatically connected to ${chosen.name}.`;
+    return next||{device:chosen,item:null,is_playing:false,progress_ms:0};
+  }
+  function visible() { return !document.hidden; }
   function schedule(delay=5000) {
     clearTimeout(timer);
     if (session && visible()) timer = setTimeout(poll, Math.max(delay, cooldown - Date.now()));
@@ -247,10 +267,11 @@
     polling = true;const before=session, version=revision;
     try {
       if(Date.now()-lastDeviceRefresh>30000)await refreshDevices();
-      const next=await api('');if(session!==before||version!==revision)return;
+      let next=await api('');if(session!==before||version!==revision)return;
+      next=await attachDefault(next);if(session!==before||version!==revision)return;
       state = selectedDevice&&next?.device?.id!==selectedDevice ? (devices.some(d=>d.id===selectedDevice&&!d.is_restricted)?{device:devices.find(d=>d.id===selectedDevice),item:null,is_playing:false,progress_ms:0}:null) : next;
       updated = Date.now(); draw();
-      message(state?.item ? `LCARS is controlling ${state.device?.name||'Spotify'}. Playback continues while you navigate.` : 'LCARS controls are connected. Open Spotify, refresh devices and choose Control app. The embedded player has its own playback.');
+      message(state?.item ? `LCARS is controlling ${state.device?.name||'Spotify'}. Playback continues while you navigate.` : state?.device?`Connected to ${state.device.name}. Press Play to resume its music.`:'LCARS controls are connected. Waiting for the Spotify app. Open or launch it and LCARS will check again automatically.');
     } catch (error) { message(error.message); }
     finally { polling = false; schedule(); }
   }
@@ -267,6 +288,7 @@
     clearTimeout(timer);clearInterval(tick);revision++; player?.disconnect(); player = null; deviceId = null;
     delete el('panel').dataset.fullPlayer;
     devices=[];lastDeviceRefresh=0;saveSession(null); sessionStorage.removeItem(pendingKey); connected(); message('Disconnected from LCARS. You can also revoke access in your Spotify account.');
+    autoAttached=false;
   }
   async function authorize() {
     const client = el('client').value.trim();
@@ -307,6 +329,7 @@
   }
   async function playHere() {
     cancelBack();
+    autoAttached=true;
     if (!player) {
       message('Starting the full Spotify player...');
       await sdk();
@@ -415,7 +438,7 @@
     if (returned) {
       try { el('link').value = JSON.parse(localStorage.getItem('voyager.spotify-player')) || ''; } catch { /* An empty link is fine. */ }
       openSpotify();
-      void poll();
     }
+    if(session)void poll();
   }).catch(error => { connected();openSpotify();message(error.message); });
 })();
