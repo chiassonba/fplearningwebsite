@@ -139,7 +139,9 @@ function render(){
         const button=document.createElement('button');button.type='button';button.dataset.spotify=action;button.textContent=label;button.disabled=true;
         button.setAttribute('aria-label',`${label==='PREV'?'Previous track':label==='NEXT'?'Next track':label==='STOP'?'Stop playback':'Play or pause'}`);controls.append(button);
       }
-      mini.append(track,remaining,controls);$('sidebar-links').append(mini);
+      const connection=document.createElement('span');connection.dataset.spotifyConnection='';
+      const setup=document.createElement('button');setup.type='button';setup.dataset.spotifySetupOpen='';setup.textContent='SELECT APP';
+      mini.append(track,remaining,connection,controls,setup);$('sidebar-links').append(mini);
     }
   });
   destinations.forEach((d,i)=>{

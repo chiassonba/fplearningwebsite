@@ -7,9 +7,9 @@
   <meta name="robots" content="noindex, nofollow, noarchive">
   <link rel="icon" type="image/png" sizes="32x32" href="images/fpl-stamp-favicon-32.png?v=20261008">
   <link rel="icon" type="image/png" sizes="64x64" href="images/fpl-stamp-favicon-64.png?v=20261008">
-  <link rel="stylesheet" href="lcars/lcars.css?v=0.1.34">
-  <script src="lcars/station.js?v=0.1.34" defer></script>
-  <script src="lcars/spotify.js?v=0.1.34" defer></script>
+  <link rel="stylesheet" href="lcars/lcars.css?v=0.1.35">
+  <script src="lcars/station.js?v=0.1.35" defer></script>
+  <script src="lcars/spotify.js?v=0.1.35" defer></script>
 </head>
 <body>
   <a class="skip" href="#command">Skip to command input</a>
@@ -76,6 +76,15 @@
           <div class="spotify-input-row"><input id="spotify-link" type="url" placeholder="https://open.spotify.com/playlist/..." aria-label="Spotify content link" required><button type="submit" class="pill gold">LOAD PLAYER</button></div>
           <p id="spotify-error" role="alert"></p>
         </form>
+        <section class="spotify-device-picker" aria-label="Spotify app selection">
+          <label for="spotify-devices">CONTROL YOUR SPOTIFY APP</label>
+          <p>Open Spotify on your computer or phone, then select it here. Playback stays in that app.</p>
+          <p data-spotify-connection>LCARS controls: not connected</p>
+          <p id="spotify-status" role="status">Connect LCARS controls to find your Spotify app. Signing into the embed alone does not authorize these controls.</p>
+          <div class="spotify-input-row"><select id="spotify-devices" aria-label="Spotify app or device" disabled><option value="">Open Spotify, then refresh devices</option></select><button id="spotify-refresh-devices" type="button" class="pill silver" disabled>REFRESH DEVICES</button><button id="spotify-use-device" type="button" class="pill gold" disabled>CONTROL APP</button></div>
+          <p id="spotify-device-help" role="status">Connect LCARS controls to find your Spotify app.</p>
+          <a class="pill peach" href="spotify:">OPEN SPOTIFY APP</a>
+        </section>
         <iframe id="spotify-frame" title="Spotify player" hidden referrerpolicy="strict-origin-when-cross-origin" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" allowfullscreen></iframe>
         <section id="spotify-playback" class="spotify-controls" aria-label="Spotify playback">
           <p>Only hearing 30 seconds? The embed may be playing a preview. Sign in at <a href="https://open.spotify.com/" target="_blank" rel="noopener">Spotify</a> in this browser, then reload the player. Full LCARS playback below requires Spotify Premium.</p>
@@ -87,12 +96,11 @@
             <p>Your Client ID is remembered on this browser. Sign-in tokens stay in this tab's session.</p>
           </details>
           <div class="spotify-input-row">
-            <button id="spotify-connect" type="button" class="pill gold">CONNECT SPOTIFY</button>
+            <button id="spotify-connect" type="button" class="pill gold">CONNECT LCARS CONTROLS</button>
             <button id="spotify-here" type="button" class="pill gold" disabled>PLAY HERE</button>
             <button id="spotify-load" type="button" class="pill blue" disabled>PLAY LOADED LINK</button>
             <button id="spotify-disconnect" type="button" class="pill silver" hidden>DISCONNECT</button>
           </div>
-          <p id="spotify-status" role="status">Connect Spotify to use full playback and seeking.</p>
           <a id="spotify-now" href="https://open.spotify.com/" target="_blank" rel="noopener">NOT PLAYING</a>
           <p id="spotify-device">Controls apply to your active Spotify device. Use Play here to listen in LCARS.</p>
           <fieldset id="spotify-transport" disabled>

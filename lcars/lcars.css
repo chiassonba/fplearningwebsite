@@ -24,3 +24,6 @@
 .top-local-time{white-space:nowrap}.top-local-time time{font-size:inherit;color:var(--peach);margin-left:5px}.spotify-now-label{color:var(--gold);font-size:10px;letter-spacing:1px}
 
 .terminal-meta{flex-wrap:wrap}
+
+.spotify-device-picker{padding:20px 0}.spotify-device-picker>label{color:var(--gold);font-size:20px;letter-spacing:1px}.spotify-device-picker p{color:var(--silver);font-size:14px}.spotify-device-picker select{max-width:none;min-width:0;flex:1;background:#11151d;border:1px solid var(--silver);color:var(--peach);padding:12px;font-family:Arial,sans-serif;font-size:14px}.spotify-device-picker .spotify-input-row{flex-wrap:wrap}.spotify-sidebar [data-spotify-connection]{display:block;color:var(--silver);font-size:11px;margin-bottom:9px}.spotify-sidebar [data-spotify-setup-open]{width:100%;margin-top:8px;background:var(--gold);color:#000;border-radius:14px;font:inherit;font-size:12px;padding:9px 3px}
+.spotify-device-picker .spotify-input-row{display:grid;grid-template-columns:minmax(0,1fr) auto auto}.spotify-device-picker select{width:100%}@media(max-width:760px){.spotify-device-picker .spotify-input-row{grid-template-columns:minmax(0,1fr)}}
