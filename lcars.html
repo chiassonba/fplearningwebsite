@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FP-LCARS</title>
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <link rel="icon" type="image/png" sizes="32x32" href="images/fpl-stamp-favicon-32.png?v=20261008">
+  <link rel="icon" type="image/png" sizes="64x64" href="images/fpl-stamp-favicon-64.png?v=20261008">
+  <link rel="stylesheet" href="lcars/lcars.css">
+  <script src="lcars/station.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#command">Skip to command input</a>
+  <header class="top-shell">
+    <div class="ship-badge"><span>LCARS</span><small>COMPUTER ACCESS</small><span class="registry">FPL-01</span></div>
+    <div class="header-main">
+      <div class="heading-line"><span>FPLEARNING NETWORK / PERSONAL TERMINAL</span><div class="terminal-meta"><span id="date">LOCAL DATE</span><span class="registry">FPL 221987</span></div></div>
+      <h1>FIRST PRINCIPLES LEARNING <span>COMMAND STATION</span></h1>
+      <div class="header-data">
+        <div class="matrix" aria-hidden="true"><span>47 0024 74656 1701 0830</span><span>58 3509 10247 0394 2247</span><span>69 0411 54009 2187 0918</span><span>70 8912 84720 4721 1640</span></div>
+        <div class="clock-block"><span>LOCAL TIME</span><time id="clock">00:00</time></div>
+        <button id="sound" class="pill gold" aria-pressed="false" title="Page sounds only. Browser-wide chirps are controlled in GX settings.">PAGE CHIRPS: OFF</button>
+        <button id="edit" class="pill peach">EDIT DESTINATIONS</button>
+      </div>
+    </div>
+  </header>
+  <div class="separator" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+  <div class="lower-shell">
+    <aside class="rail">
+      <a class="rail-cap" href="#command">01 / NAVIGATION</a>
+      <a href="https://mail.google.com/" class="peach">02 / COMMUNICATIONS</a>
+      <a href="https://calendar.google.com/" class="blue">03 / CHRONOMETER</a>
+      <a href="https://drive.google.com/" class="silver">04 / ARCHIVES</a>
+      <a href="https://fplearning.ca/" class="earth">05 / FPLearning Interlink</a>
+      <div class="rail-fill"><span>ACCESS<br>47-ALPHA</span></div>
+      <div class="rail-end">74656 / TERMINAL 01</div>
+    </aside>
+    <main>
+      <div class="section-band"><span>PERSONAL ACCESS TERMINAL</span><span>01-047</span></div>
+      <section class="command-section">
+        <div class="eyebrow"><span class="indicator"></span> AWAITING YOUR COMMAND</div>
+        <h2>Search</h2>
+        <form id="command-form" class="command-form" role="search">
+          <label class="sr-only" for="command">Search the web or enter a website address</label>
+          <input id="command" type="text" autocomplete="off" spellcheck="false" placeholder="SEARCH THE WEB OR ENTER AN ADDRESS" autofocus>
+          <label class="sr-only" for="engine">Search engine</label>
+          <select id="engine"><option value="google">GOOGLE.CA</option><option value="duckduckgo">DUCKDUCKGO</option><option value="bing">BING</option></select>
+          <button class="pill gold" type="submit">ENGAGE <span aria-hidden="true">↗</span></button>
+        </form>
+        <p class="input-hint">ENTER A DESTINATION OR SEARCH QUERY. PRESS ENTER TO ENGAGE.</p>
+      </section>
+      <section class="destinations" aria-labelledby="dest-title">
+        <div class="section-label"><h3 id="dest-title">SAVED COORDINATES</h3><span>PERSONAL NAVIGATION</span></div>
+        <div id="destinations" class="destination-grid"></div>
+      </section>
+      <section class="systems" aria-label="Terminal information">
+        <div class="schematic" aria-hidden="true"><div class="rings"><i></i></div><span>FPLEARNING / NETWORK ACCESS</span></div>
+        <div class="system-readout"><div><span>INTERFACE</span><span>LCARS / FPLearning</span></div><div><span>TERMINAL STORAGE</span><span id="storage-status">LOCAL ONLY</span></div><div><span>NETWORK ACTIVITY</span><span>ON NAVIGATION ONLY</span></div><div><span>VISUAL MODE</span><span>STATIC / LOW POWER</span></div></div>
+      </section>
+      <footer><span>LCARS 47 • PERSONAL TERMINAL</span><a href="https://www.thelcars.com/themes/voyager.html">PALETTE REFERENCE: THELCARS.COM</a></footer>
+    </main>
+  </div>
+  <div class="bottom-band" aria-hidden="true"><i></i><i></i><i></i></div>
+  <dialog id="editor">
+    <form id="edit-form">
+      <div class="section-label"><h2>DESTINATION CONTROL</h2><button type="button" id="close" class="close" aria-label="Close destination editor">✕</button></div>
+      <p>Choose six destinations. Use full https:// or http:// addresses.</p>
+      <div id="edit-rows"></div>
+      <p id="edit-error" role="alert"></p>
+      <button type="submit" class="pill gold">SAVE COORDINATES</button>
+    </form>
+  </dialog>
+</body>
+</html>

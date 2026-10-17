@@ -1,0 +1,32 @@
+{
+  "version": "1.1.0",
+  "retrieved": "2026-10-17",
+  "reference": "https://www.thelcars.com/themes/voyager.html",
+  "processing": "Original bytes preserved. No synthesis, pitch changes, trimming or re-encoding.",
+  "files": [
+    {
+      "file": "assets/audio/beep1.mp3",
+      "url": "https://www.thelcars.com/themes/assets/beep1.mp3",
+      "bytes": 4641,
+      "sha256": "ea4ec3332c227fa70d14b614ca1b2bd35014e155063116ecafba0bff6dbb8222"
+    },
+    {
+      "file": "assets/audio/beep2.mp3",
+      "url": "https://www.thelcars.com/themes/assets/beep2.mp3",
+      "bytes": 4641,
+      "sha256": "5bec9eb7910c99737f3896ab8ca08e4d6f8f8abc59f0b2caaecbc63652a33101"
+    },
+    {
+      "file": "assets/audio/beep3.mp3",
+      "url": "https://www.thelcars.com/themes/assets/beep3.mp3",
+      "bytes": 13857,
+      "sha256": "7f91144261b827ccbc2eb40e11274deda32e533c9649658b32846104bfe12076"
+    },
+    {
+      "file": "assets/audio/beep4.mp3",
+      "url": "https://www.thelcars.com/themes/assets/beep4.mp3",
+      "bytes": 28449,
+      "sha256": "9a8c59dd21f37621414f25001ecbface204101f883f7b1f10b1505a335fe30c9"
+    }
+  ]
+}

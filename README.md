@@ -34,6 +34,16 @@ Set www as a CNAME to chiassonba.github.io. Preserve email-related records, incl
 
 Reference: https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site
 
+## FP-LCARS command station
+
+- Page: https://fplearning.ca/lcars.html. This standalone page is unlisted in the public navigation and includes `noindex, nofollow, noarchive` metadata. It remains publicly accessible.
+- Assets live under `lcars/` and do not change the production homepage styles or scripts. There is no build step or external runtime dependency.
+- The tab title is `FP-LCARS`, the heading is First Principles Learning Command Station, and the top-right registry is `FPL 221987`.
+- Search defaults to Google.ca; Astrometrics opens Google Maps, Subspace Media opens Spotify, FPLearning Interlink opens the public FPL website, and FPL Resources opens the administrative file library.
+- Saved destinations, search selection and page-audio preference are stored in this origin's browser local storage. They are not uploaded or shared with other visitors. Extension-local settings do not automatically migrate to this hosted page.
+- The optional page chirps use the unchanged reference audio documented in `lcars/AUDIO-SOURCES.json`. The Antonio font licence is supplied in `lcars/assets/OFL-Antonio.txt`.
+- To use this hosted page at browser startup or as a custom new-tab destination, set the address to `https://fplearning.ca/lcars.html`. Browser-wide keyboard audio still comes from the separately installed GX mod. The page sound toggle only controls audio inside this page.
+
 ## Administrative file library
 
 - Page: https://fplearning.ca/files.htm (no link is added to the public homepage).
