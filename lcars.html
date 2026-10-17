@@ -7,9 +7,9 @@
   <meta name="robots" content="noindex, nofollow, noarchive">
   <link rel="icon" type="image/png" sizes="32x32" href="images/fpl-stamp-favicon-32.png?v=20261008">
   <link rel="icon" type="image/png" sizes="64x64" href="images/fpl-stamp-favicon-64.png?v=20261008">
-  <link rel="stylesheet" href="lcars/lcars.css?v=0.1.43">
-  <script src="lcars/station.js?v=0.1.43" defer></script>
-  <script src="lcars/spotify.js?v=0.1.43" defer></script>
+  <link rel="stylesheet" href="lcars/lcars.css?v=0.1.44">
+  <script src="lcars/station.js?v=0.1.44" defer></script>
+  <script src="lcars/spotify.js?v=0.1.44" defer></script>
 </head>
 <body>
   <a class="skip" href="#command">Skip to command input</a>
@@ -100,7 +100,7 @@
             <p>Create a personal app in the <a href="https://developer.spotify.com/dashboard" target="_blank" rel="noopener">Spotify developer dashboard</a>. Select Web API and Web Playback SDK. Add this exact redirect address: <code id="spotify-redirect"></code>. If using another account, add it under Users Management.</p>
             <label for="spotify-client">SPOTIFY CLIENT ID</label>
             <div class="spotify-input-row"><input id="spotify-client" autocomplete="off" spellcheck="false" placeholder="Public Client ID, never a client secret"></div>
-            <p>Your Client ID is remembered on this browser. Sign-in tokens stay in this tab's session.</p>
+            <p>Spotify stays connected in this browser across tabs and restarts. Disconnect clears the saved sign-in.</p>
           </details>
           <div class="spotify-input-row">
             <button id="spotify-connect" type="button" class="pill gold">CONNECT LCARS CONTROLS</button>

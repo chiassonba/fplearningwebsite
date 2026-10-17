@@ -32,7 +32,7 @@
   let renderedPlaylistRows;
   const message = value => { el('status').textContent = value; };
   const stored = (store, name) => { try { return JSON.parse(store.getItem(name)); } catch { return null; } };
-  const saveSession = value => { session = value; if (value) sessionStorage.setItem(key, JSON.stringify(value)); else sessionStorage.removeItem(key); };
+  const saveSession = value => { session = value; if (value) localStorage.setItem(key, JSON.stringify(value)); else localStorage.removeItem(key); sessionStorage.removeItem(key); };
   const base64 = bytes => btoa(String.fromCharCode(...bytes)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
   const random = () => base64(crypto.getRandomValues(new Uint8Array(32)));
   const time = ms => { const s = Math.floor(Math.max(0, ms || 0) / 1000); return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`; };
@@ -178,22 +178,32 @@
   }
   async function tokenRequest(params) {
     const response = await fetch('https://accounts.spotify.com/api/token', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams(params) });
-    if (!response.ok) throw new Error('Spotify sign-in expired or was rejected. Connect again and check the app redirect address.');
+    if (!response.ok) { const error=new Error(response.status>=500?'Spotify sign-in is temporarily unavailable. LCARS will retry.':'Spotify sign-in expired or was rejected. Connect again and check the app redirect address.'); error.status=response.status; throw error; }
     return response.json();
   }
   async function accessToken() {
     if (!session) throw new Error('Connect Spotify first.');
     if (session.expires > Date.now() + 60000) return session.access;
-    if (!refreshTask) refreshTask = (async () => {
-      const before = session;
-      try {
-        const data = await tokenRequest({ grant_type: 'refresh_token', refresh_token: before.refresh, client_id: before.client });
-        if (session !== before) throw new Error('Spotify disconnected.');
-        saveSession({ ...before, access: data.access_token, refresh: data.refresh_token || before.refresh, expires: Date.now() + data.expires_in * 1000 });
-        return session.access;
-      } catch (error) { disconnect(); throw error; }
-      finally { refreshTask = null; }
-    })();
+    if (!refreshTask) {
+      const refresh=async()=>{
+        // Reuse a token another LCARS tab renewed while this tab waited.
+        const saved=stored(localStorage,key);
+        if(!saved){disconnect();throw new Error('Spotify disconnected.');}
+        if(saved.expires>Date.now()+60000){session=saved;return saved.access;}
+        session=saved;const before=session;
+        try {
+          const data=await tokenRequest({grant_type:'refresh_token',refresh_token:before.refresh,client_id:before.client});
+          if(session!==before)throw new Error('Spotify connection changed. Try again.');
+          saveSession({...before,access:data.access_token,refresh:data.refresh_token||before.refresh,expires:Date.now()+data.expires_in*1000});
+          return session.access;
+        }catch(error){
+          if(error.status===400||error.status===401)disconnect();
+          throw error;
+        }
+      };
+      // Serialize refreshes across tabs without a background service.
+      refreshTask=(navigator.locks?navigator.locks.request('fpl.spotify.refresh',refresh):refresh()).finally(()=>{refreshTask=null;});
+    }
     return refreshTask;
   }
   async function api(path, method = 'GET', body) {
@@ -377,7 +387,7 @@
     state.progress_ms = value; updated = Date.now(); draw(); message(`Position: ${time(value)}`);
   }
   el('redirect').textContent = redirect;
-  try { el('client').value = localStorage.getItem('fpl.spotify.client') || 'cbfcdfdb43c94507937d71d50ef1360e'; session = stored(sessionStorage, key);selectedDevice=stored(localStorage,'fpl.spotify.device')?.id||'';if(selectedDevice)el('panel').dataset.fullPlayer='true'; } catch { message('Browser storage is unavailable. Allow site storage to connect Spotify.'); }
+  try { el('client').value = localStorage.getItem('fpl.spotify.client') || 'cbfcdfdb43c94507937d71d50ef1360e'; session = stored(localStorage,key)||stored(sessionStorage,key);if(session)saveSession(session);selectedDevice=stored(localStorage,'fpl.spotify.device')?.id||'';if(selectedDevice)el('panel').dataset.fullPlayer='true'; } catch { message('Browser storage is unavailable. Allow site storage to connect Spotify.'); }
   el('connect').addEventListener('click', () => run(authorize));
   el('disconnect').addEventListener('click', disconnect);
   el('here').addEventListener('click', () => run(playHere));
@@ -431,6 +441,13 @@
   document.addEventListener('spotify-view-change',viewChanged);
   document.addEventListener('spotify-links-rendered',drawMini);
   document.addEventListener('visibilitychange',()=>{if(document.hidden)cancelBack();viewChanged();});
+  window.addEventListener('storage',event=>{
+    if(event.storageArea!==localStorage||(event.key!==key&&event.key!==null))return;
+    const next=stored(localStorage,key);
+    if(!next){disconnect();return;}
+    if(session?.access===next.access&&session?.refresh===next.refresh&&session?.expires===next.expires)return;
+    revision++;session=next;autoAttached=false;connected();if(visible())void poll();
+  });
   window.addEventListener('pagehide', () => { cancelBack();clearTimeout(timer);clearInterval(tick); player?.disconnect(); });
   connected();
   callback().then(returned => {
