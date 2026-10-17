@@ -7,9 +7,9 @@
   <meta name="robots" content="noindex, nofollow, noarchive">
   <link rel="icon" type="image/png" sizes="32x32" href="images/fpl-stamp-favicon-32.png?v=20261008">
   <link rel="icon" type="image/png" sizes="64x64" href="images/fpl-stamp-favicon-64.png?v=20261008">
-  <link rel="stylesheet" href="lcars/lcars.css?v=0.1.40">
-  <script src="lcars/station.js?v=0.1.40" defer></script>
-  <script src="lcars/spotify.js?v=0.1.40" defer></script>
+  <link rel="stylesheet" href="lcars/lcars.css?v=0.1.41">
+  <script src="lcars/station.js?v=0.1.41" defer></script>
+  <script src="lcars/spotify.js?v=0.1.41" defer></script>
 </head>
 <body>
   <a class="skip" href="#command">Skip to command input</a>
@@ -69,6 +69,7 @@
       </section>
       <section id="spotify-panel" class="spotify-panel" aria-label="Spotify player" hidden>
         <div id="spotify-panel-body">
+        <p><a class="pill peach" href="spotify:">LAUNCH SPOTIFY APP ↗</a></p>
         <section id="spotify-app-view" class="spotify-app-view" aria-label="Spotify app playlist" hidden>
           <div class="section-label"><h3 id="spotify-playlist-title">APP PLAYBACK</h3><a id="spotify-playlist-open" target="_blank" rel="noopener">OPEN IN SPOTIFY ↗</a></div>
           <p id="spotify-app-track"></p>
@@ -90,7 +91,6 @@
           <p id="spotify-status" role="status">Connect LCARS controls to find your Spotify app. Signing into the embed alone does not authorize these controls.</p>
           <div class="spotify-input-row"><select id="spotify-devices" aria-label="Spotify app or device" disabled><option value="">Open Spotify, then refresh devices</option></select><button id="spotify-refresh-devices" type="button" class="pill silver" disabled>REFRESH DEVICES</button><button id="spotify-use-device" type="button" class="pill gold" disabled>CONTROL APP</button></div>
           <p id="spotify-device-help" role="status">Connect LCARS controls to find your Spotify app.</p>
-          <a class="pill peach" href="spotify:">OPEN SPOTIFY APP</a>
         </section>
         <iframe id="spotify-frame" title="Spotify player" hidden referrerpolicy="strict-origin-when-cross-origin" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" allowfullscreen></iframe>
         <section id="spotify-playback" class="spotify-controls" aria-label="Spotify playback">

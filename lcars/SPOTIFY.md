@@ -19,7 +19,11 @@ Play here explicitly transfers the account's player to FP-LCARS and stops the em
 
 ## Control the Spotify app
 
-Open Spotify on your computer or phone with the same account. In Subspace Media, click Refresh devices, choose the app/device, then Control app. This explicitly transfers the account's playback device with playback paused and stops the independent embed. Click Play to resume the app's queue, or Play loaded link to play the pasted track or playlist in that app. The sidebar and volume controls target the selected app, even if another device was previously active.
+With an existing Spotify authorization, LCARS checks devices immediately on page load and prefers the remembered or available desktop app. If another device is already playing, it attaches there without transferring or pausing that playback. No music starts automatically. Opening Subspace Media is not required for the sidebar to connect. Manual device selection remains available.
+
+To launch Spotify on demand, use Launch Spotify App at the top of Subspace Media. This uses the installed Spotify protocol handler and the browser may ask for confirmation.
+
+For a manual switch, open Spotify with the same account. In Subspace Media, click Refresh devices, choose the app/device, then Control app. This explicitly transfers the account's playback device with playback paused and stops the independent embed. Click Play to resume the app's queue, or Play loaded link to play the pasted track or playlist in that app. The sidebar and volume controls target the selected app, even if another device was previously active.
 
 The selected device ID/name is remembered locally, independently of sign-in tokens. An offline or restricted device is not silently replaced with another device. Open the app, play a song once if needed, then refresh and select it again. Choose Play here only when you want the optional player inside LCARS instead.
 
@@ -33,7 +37,7 @@ Spotify development-mode access may limit playlist items to playlists owned by t
 
 - OAuth uses Authorization Code with PKCE and a random, expiring state value. Invalid callbacks are rejected before token exchange, and callback parameters are removed from the address bar.
 - The public Client ID is remembered locally. Access and refresh tokens are stored only in this tab's session storage. No credentials are sent to an FPL server.
-- The SDK loads only after Play here. Playback state is polled every five seconds while the Spotify panel has been opened and the browser tab is visible, including when its player is running offscreen. A local one-second countdown updates remaining time without additional Spotify requests. Spotify retry delays are respected.
+- The SDK loads only after Play here. Playback state is polled every five seconds while LCARS is visible, starting on page load. Device discovery is refreshed every 30 seconds. Playlist data loads only when Subspace Media is open. A local one-second countdown updates remaining time without additional Spotify requests. Spotify retry delays are respected.
 - Browser protected-content settings, Spotify app access and account permissions still apply. Denial, expiry, unavailable devices and rate limits produce messages in the panel.
 
 ## Validation
