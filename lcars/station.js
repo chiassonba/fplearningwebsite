@@ -133,7 +133,7 @@ function render(){
         button.setAttribute('aria-label',`${label==='PREV'?'Previous track':label==='NEXT'?'Next track':label==='STOP'?'Stop playback':'Play or pause'}`);controls.append(button);
       }
       const connection=document.createElement('span');connection.dataset.spotifyConnection='';
-      mini.append(track,remaining,connection,controls);$('sidebar-links').append(mini);
+      mini.append(track,$('spotify-signal-template').content.cloneNode(true),remaining,connection,controls);$('sidebar-links').append(mini);
     }
   });
   destinations.forEach((d,i)=>{

@@ -4,6 +4,13 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
+## [0.1.37] - 2026-10-17
+
+### Added
+
+- Added a decorative SVG wave beside the Spotify sidebar controls. CSS pulses it during reported Spotify playback and flattens it when paused or disconnected.
+- Reused existing playback updates, with no audio capture, new requests or animation timers. Respect reduced-motion settings. Peaks are decorative and do not measure music loudness.
+
 ## [0.1.36] - 2026-10-17
 
 ### Added
