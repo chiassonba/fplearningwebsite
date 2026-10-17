@@ -7,9 +7,9 @@
   <meta name="robots" content="noindex, nofollow, noarchive">
   <link rel="icon" type="image/png" sizes="32x32" href="images/fpl-stamp-favicon-32.png?v=20261008">
   <link rel="icon" type="image/png" sizes="64x64" href="images/fpl-stamp-favicon-64.png?v=20261008">
-  <link rel="stylesheet" href="lcars/lcars.css?v=0.1.30">
-  <script src="lcars/station.js?v=0.1.30" defer></script>
-  <script src="lcars/spotify.js?v=0.1.32" defer></script>
+  <link rel="stylesheet" href="lcars/lcars.css?v=0.1.33">
+  <script src="lcars/station.js?v=0.1.33" defer></script>
+  <script src="lcars/spotify.js?v=0.1.33" defer></script>
 </head>
 <body>
   <a class="skip" href="#command">Skip to command input</a>
@@ -66,14 +66,19 @@
           <a id="screen-external" class="pill peach" target="_blank" rel="noopener">OPEN IN NEW TAB ↗</a>
         </div>
         <p class="screen-hint">If a page cannot display here, use Open in new tab.</p>
-        <form id="spotify-form" class="spotify-controls" hidden>
+        <iframe id="screen-frame" title="LCARS embedded content" referrerpolicy="strict-origin-when-cross-origin" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" allowfullscreen sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-downloads"></iframe>
+      </section>
+      <section id="spotify-panel" class="spotify-panel" aria-label="Spotify player" hidden>
+        <div class="spotify-dock-header"><div><span data-spotify-track>SUBSPACE MEDIA</span><span data-spotify-remaining>Connect Spotify for track details</span></div><button id="spotify-expand" class="pill gold" type="button">COLLAPSE PLAYER</button></div>
+        <div id="spotify-panel-body">
+        <form id="spotify-form" class="spotify-controls">
           <label for="spotify-link">SPOTIFY PLAYER</label>
           <p>Paste a Spotify playlist, album, song, artist or podcast link. Your last player is remembered on this browser.</p>
           <div class="spotify-input-row"><input id="spotify-link" type="url" placeholder="https://open.spotify.com/playlist/..." aria-label="Spotify content link" required><button type="submit" class="pill gold">LOAD PLAYER</button></div>
           <p id="spotify-error" role="alert"></p>
         </form>
-        <iframe id="screen-frame" title="LCARS embedded content" referrerpolicy="strict-origin-when-cross-origin" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" allowfullscreen sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-downloads"></iframe>
-        <section id="spotify-playback" class="spotify-controls" aria-label="Spotify playback" hidden>
+        <iframe id="spotify-frame" title="Spotify player" referrerpolicy="strict-origin-when-cross-origin" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" allowfullscreen></iframe>
+        <section id="spotify-playback" class="spotify-controls" aria-label="Spotify playback">
           <p>Only hearing 30 seconds? The embed may be playing a preview. Sign in at <a href="https://open.spotify.com/" target="_blank" rel="noopener">Spotify</a> in this browser, then reload the player. Full LCARS playback below requires Spotify Premium.</p>
           <details id="spotify-setup">
             <summary>SPOTIFY CONNECTION SETTINGS</summary>
@@ -99,12 +104,14 @@
               <button id="spotify-toggle" type="button" class="pill gold" data-spotify="toggle">PLAY</button>
               <button type="button" class="pill blue" data-spotify="forward">FORWARD 15s</button>
               <button type="button" class="pill silver" data-spotify="next">NEXT</button>
+              <button type="button" class="pill peach" data-spotify="stop">STOP</button>
             </div>
           </fieldset>
           <label for="spotify-volume">VOLUME</label>
           <div class="spotify-seek-row"><input id="spotify-volume" type="range" min="0" max="100" value="50" step="1" aria-describedby="spotify-volume-hint" disabled><output id="spotify-volume-value" for="spotify-volume">50%</output></div>
           <p id="spotify-volume-hint">Connect Spotify and start playback to adjust volume.</p>
         </section>
+        </div>
       </section>
     </main>
   </div>

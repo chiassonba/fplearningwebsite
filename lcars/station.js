@@ -53,10 +53,28 @@ function setScreenSource(source){
   else frame.setAttribute('sandbox','allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-downloads');
   frame.src=source;
 }
+function dockSpotify(){
+  const panel=$('spotify-panel');if(panel.hidden)return;
+  panel.classList.add('is-docked');$('spotify-panel-body').inert=true;
+  $('spotify-expand').textContent='OPEN PLAYER';
+  document.body.classList.add('has-media-dock');
+}
+function openSpotify(){
+  const panel=$('spotify-panel');panel.hidden=false;panel.classList.remove('is-docked');
+  $('spotify-panel-body').inert=false;$('spotify-expand').textContent='COLLAPSE PLAYER';
+  document.body.classList.remove('has-media-dock');
+  $('command-station').hidden=true;$('embedded-screen').hidden=false;
+  $('screen-title').textContent='SUBSPACE MEDIA';$('screen-frame').hidden=true;
+  $('screen-external').href=spotifyContent($('spotify-link').value)?.original||'https://open.spotify.com/';
+  document.dispatchEvent(new Event('spotify-view-change'));
+}
+$('spotify-expand').addEventListener('click',()=>{
+  if($('spotify-panel').classList.contains('is-docked')){openSpotify();$('spotify-link').focus();}
+  else{showStation();$('spotify-expand').focus();}
+});
 function showStation(){
   $('screen-frame').removeAttribute('src');
-  $('spotify-form').hidden=true;$('spotify-error').textContent='';
-  $('spotify-playback').hidden=true;
+  dockSpotify();
   $('embedded-screen').hidden=true;$('command-station').hidden=false;
   (screenTrigger?.isConnected?screenTrigger:$('command')).focus();screenTrigger=null;
 }
@@ -67,23 +85,19 @@ function openScreen(url,label,trigger){
   $('screen-title').textContent=label;
   $('screen-frame').title=`${label} in the LCARS screen`;
   $('spotify-error').textContent='';
-  $('spotify-form').hidden=!isSpotify(destination);
-  $('spotify-playback').hidden=!isSpotify(destination);
   if(isSpotify(destination)){
     const content=spotifyContent(destination.href)||spotifyContent(read('voyager.spotify-player',''));
-    $('spotify-link').value=content?content.original:'';
-    $('screen-frame').hidden=!content;
-    if(content){setScreenSource(content.embed);$('screen-external').href=content.original;}
-    else{$('screen-frame').removeAttribute('src');$('screen-external').href=destination.href;}
-  }else{$('screen-frame').hidden=false;setScreenSource(destination.href);$('screen-external').href=destination.href;}
+    if(!$('spotify-frame').hasAttribute('src')&&!$('spotify-panel').dataset.fullPlayer&&content){$('spotify-link').value=content.original;$('spotify-frame').src=content.embed;}
+    openSpotify();
+  }else{dockSpotify();$('screen-frame').hidden=false;setScreenSource(destination.href);$('screen-external').href=destination.href;}
   $('command-station').hidden=true;$('embedded-screen').hidden=false;
   $('screen-title').focus();
 }
 $('spotify-form').addEventListener('submit',e=>{
   e.preventDefault();const content=spotifyContent($('spotify-link').value.trim());
   if(!content){$('spotify-error').textContent='Use a Spotify playlist, album, song, artist, show or episode link from open.spotify.com.';return;}
-  $('spotify-error').textContent='';setScreenSource(content.embed);$('screen-frame').hidden=false;
-  $('screen-frame').title='Spotify player';$('screen-external').href=content.original;
+  $('spotify-error').textContent='';$('spotify-frame').src=content.embed;$('spotify-frame').hidden=false;
+  $('screen-external').href=content.original;
   if(!write('voyager.spotify-player',content.original))$('spotify-error').textContent='Player loaded. This browser could not remember your selection.';
 });
 $('screen-home').addEventListener('click',showStation);
@@ -116,6 +130,17 @@ function render(){
   destinations.forEach((d,i)=>{
     const link=document.createElement('a');link.className=['peach','blue','silver','earth'][i%4];
     prepareLink(link,d);link.textContent=`${String(i+1).padStart(2,'0')} / ${d.name}`;$('sidebar-links').append(link);
+    if(isSpotify(new URL(d.url))){
+      const mini=document.createElement('section');mini.className='spotify-sidebar';mini.setAttribute('aria-label',`${d.name} playback`);
+      const track=document.createElement('span');track.dataset.spotifyTrack='';track.textContent='NOT PLAYING';
+      const remaining=document.createElement('span');remaining.dataset.spotifyRemaining='';remaining.textContent='Connect Spotify for controls';
+      const controls=document.createElement('div');controls.className='spotify-sidebar-buttons';
+      for(const [action,label] of [['previous','PREV'],['next','NEXT'],['toggle','PLAY'],['stop','STOP']]){
+        const button=document.createElement('button');button.type='button';button.dataset.spotify=action;button.textContent=label;button.disabled=true;
+        button.setAttribute('aria-label',`${label==='PREV'?'Previous track':label==='NEXT'?'Next track':label==='STOP'?'Stop playback':'Play or pause'}`);controls.append(button);
+      }
+      mini.append(track,remaining,controls);$('sidebar-links').append(mini);
+    }
   });
   destinations.forEach((d,i)=>{
     const a=document.createElement('a');a.className='destination';prepareLink(a,d);
@@ -126,6 +151,7 @@ function render(){
     const host=document.createElement('span');host.className='host';host.textContent=new URL(d.url).hostname.replace(/^www\./,'').toUpperCase();
     target.append(name,host);a.append(number,target);$('destinations').append(a);
   });
+  document.dispatchEvent(new Event('spotify-links-rendered'));
 }
 function soundLabel(){$('sound').textContent=`PAGE CHIRPS: ${sound?'ON':'OFF'}`;$('sound').setAttribute('aria-pressed',String(sound));}
 $('sound').addEventListener('click',()=>{sound=!sound;write('voyager.sound',sound);soundLabel();if(!sound)activeSample?.pause();chirp('enter');});
