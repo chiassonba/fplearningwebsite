@@ -22,16 +22,20 @@
   function draw() {
     const item = state?.item, allowed = state?.actions?.disallows || {};
     el('transport').disabled = !session || !item || state?.device?.is_restricted;
-    el('seek').disabled = !item || !!allowed.seeking;
-    el('seek').max = Math.max(1, item?.duration_ms || 0);
-    if (document.activeElement !== el('seek')) el('seek').value = position();
-    el('position').textContent = time(position()); el('duration').textContent = time(item?.duration_ms);
     el('toggle').textContent = state?.is_playing ? 'PAUSE' : 'PLAY';
     el('now').textContent = item ? `${item.name} / ${(item.artists || []).map(a => a.name).join(', ') || item.show?.name || 'Spotify'}` : 'NOT PLAYING';
     el('now').href = item?.external_urls?.spotify || 'https://open.spotify.com/';
     el('device').textContent = state?.device ? `ACTIVE DEVICE: ${state.device.name}` : 'Start Spotify on a device, or choose Play here.';
     const restrictions = { previous: 'skipping_prev', next: 'skipping_next', back: 'seeking', forward: 'seeking', toggle: state?.is_playing ? 'pausing' : 'resuming' };
     document.querySelectorAll('[data-spotify]').forEach(b => { b.disabled = !!allowed[restrictions[b.dataset.spotify]]; });
+    drawVolume();
+  }
+  function drawVolume() {
+    const device = state?.device;
+    el('volume').disabled = !session || !device || device.is_restricted || device.supports_volume !== true;
+    if (document.activeElement !== el('volume') && Number.isFinite(device?.volume_percent)) el('volume').value = device.volume_percent;
+    el('volume-value').textContent = `${el('volume').value}%`;
+    el('volume-hint').textContent = device?.supports_volume === false ? 'This device uses its own volume controls.' : device ? `Volume for ${device.name}.` : 'Connect Spotify and start playback to adjust volume.';
   }
   async function tokenRequest(params) {
     const response = await fetch('https://accounts.spotify.com/api/token', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams(params) });
@@ -79,7 +83,7 @@
     finally { busy = false; schedule(); }
   }
   async function run(task) {
-    if (busy) return;
+    if (busy) { message('Spotify is handling another request. Try again in a moment.'); return; }
     busy = true; clearTimeout(timer);
     try { await task(); }
     catch (error) { message(error.message); }
@@ -170,8 +174,15 @@
   el('disconnect').addEventListener('click', disconnect);
   el('here').addEventListener('click', () => run(playHere));
   el('load').addEventListener('click', () => run(loadLink));
-  el('seek').addEventListener('input', () => { el('position').textContent = time(Number(el('seek').value)); });
-  el('seek').addEventListener('change', () => run(() => seek(Number(el('seek').value))));
+  el('volume').addEventListener('input', () => { el('volume-value').textContent = `${el('volume').value}%`; });
+  el('volume').addEventListener('change', () => run(async () => {
+    const device = state?.device;
+    if (!device || device.is_restricted || device.supports_volume !== true) throw new Error('Volume is unavailable on this device. Use its own volume controls.');
+    const value = Math.round(Math.max(0, Math.min(100, Number(el('volume').value))));
+    if (player && deviceId && device.id === deviceId) await player.setVolume(value / 100);
+    else await api(`/volume?volume_percent=${value}${device.id ? `&device_id=${encodeURIComponent(device.id)}` : ''}`, 'PUT');
+    device.volume_percent = value; drawVolume(); message(`Volume: ${value}%`);
+  }));
   document.querySelectorAll('[data-spotify]').forEach(button => button.addEventListener('click', () => run(async () => {
     const action = button.dataset.spotify;
     if (['back', 'forward'].includes(action)) return seek(position() + (action === 'back' ? -15000 : 15000));
