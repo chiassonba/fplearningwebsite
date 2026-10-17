@@ -155,6 +155,12 @@
       message('Starting the full Spotify player...');
       await sdk();
       player = new Spotify.Player({ name: 'FP-LCARS', getOAuthToken: cb => { accessToken().then(cb).catch(error => message(error.message)); }, volume: 0.5 });
+      player.addListener('player_state_changed', data => {
+        const track=data?.track_window?.current_track;if(!session||!track)return;
+        revision++;updated=Date.now();
+        state={item:{...track,duration_ms:data.duration||track.duration_ms,external_urls:{spotify:`https://open.spotify.com/track/${track.id}`}},progress_ms:data.position,is_playing:!data.paused,device:{id:deviceId,name:'FP-LCARS',supports_volume:true,volume_percent:state?.device?.id===deviceId?state.device.volume_percent:50},actions:{disallows:data.disallows||{}}};
+        draw();
+      });
       player.addListener('not_ready', () => { deviceId = null; message('LCARS player went offline. Choose Play here to reconnect.'); });
       player.addListener('autoplay_failed', () => message('Click Play to allow audio in this browser.'));
       for (const name of ['initialization_error', 'authentication_error', 'account_error', 'playback_error']) player.addListener(name, () => message(name === 'account_error' ? 'Full playback requires Spotify Premium.' : 'Spotify player could not play. Check protected content and Spotify sign-in, or use another active Spotify device.'));

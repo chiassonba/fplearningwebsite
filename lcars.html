@@ -7,20 +7,19 @@
   <meta name="robots" content="noindex, nofollow, noarchive">
   <link rel="icon" type="image/png" sizes="32x32" href="images/fpl-stamp-favicon-32.png?v=20261008">
   <link rel="icon" type="image/png" sizes="64x64" href="images/fpl-stamp-favicon-64.png?v=20261008">
-  <link rel="stylesheet" href="lcars/lcars.css?v=0.1.33">
-  <script src="lcars/station.js?v=0.1.33" defer></script>
-  <script src="lcars/spotify.js?v=0.1.33" defer></script>
+  <link rel="stylesheet" href="lcars/lcars.css?v=0.1.34">
+  <script src="lcars/station.js?v=0.1.34" defer></script>
+  <script src="lcars/spotify.js?v=0.1.34" defer></script>
 </head>
 <body>
   <a class="skip" href="#command">Skip to command input</a>
   <header class="top-shell">
     <div class="ship-badge"><span>LCARS</span><small>COMPUTER ACCESS</small><span class="registry">FPL-01</span></div>
     <div class="header-main">
-      <div class="heading-line"><span>FPLEARNING NETWORK / PERSONAL TERMINAL</span><div class="terminal-meta"><span id="date">LOCAL DATE</span><span class="registry">FPL 221987</span></div></div>
+      <div class="heading-line"><span>FPLEARNING NETWORK / PERSONAL TERMINAL</span><div class="terminal-meta"><span id="date">LOCAL DATE</span><span class="top-local-time">LOCAL TIME <time id="clock">00:00</time></span><span class="registry">FPL 221987</span></div></div>
       <h1>FIRST PRINCIPLES LEARNING <span>COMMAND STATION</span></h1>
       <div class="header-data">
         <div class="matrix" aria-hidden="true"><span>47 0024 74656 1701 0830</span><span>58 3509 10247 0394 2247</span><span>69 0411 54009 2187 0918</span><span>70 8912 84720 4721 1640</span></div>
-        <div class="clock-block"><span>LOCAL TIME</span><time id="clock">00:00</time></div>
         <button id="sound" class="pill gold" aria-pressed="false" title="Page sounds only. Browser-wide chirps are controlled in GX settings.">PAGE CHIRPS: OFF</button>
         <button id="edit" class="pill peach">EDIT LINKS</button>
       </div>
@@ -69,7 +68,7 @@
         <iframe id="screen-frame" title="LCARS embedded content" referrerpolicy="strict-origin-when-cross-origin" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" allowfullscreen sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-downloads"></iframe>
       </section>
       <section id="spotify-panel" class="spotify-panel" aria-label="Spotify player" hidden>
-        <div class="spotify-dock-header"><div><span data-spotify-track>SUBSPACE MEDIA</span><span data-spotify-remaining>Connect Spotify for track details</span></div><button id="spotify-expand" class="pill gold" type="button">COLLAPSE PLAYER</button></div>
+        <div class="spotify-dock-header"><div><span class="spotify-now-label">NOW PLAYING</span><span data-spotify-track>SUBSPACE MEDIA</span><span data-spotify-remaining>Connect Spotify for track details</span></div><button id="spotify-expand" class="pill gold" type="button">COLLAPSE PLAYER</button></div>
         <div id="spotify-panel-body">
         <form id="spotify-form" class="spotify-controls">
           <label for="spotify-link">SPOTIFY PLAYER</label>
@@ -77,7 +76,7 @@
           <div class="spotify-input-row"><input id="spotify-link" type="url" placeholder="https://open.spotify.com/playlist/..." aria-label="Spotify content link" required><button type="submit" class="pill gold">LOAD PLAYER</button></div>
           <p id="spotify-error" role="alert"></p>
         </form>
-        <iframe id="spotify-frame" title="Spotify player" referrerpolicy="strict-origin-when-cross-origin" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" allowfullscreen></iframe>
+        <iframe id="spotify-frame" title="Spotify player" hidden referrerpolicy="strict-origin-when-cross-origin" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" allowfullscreen></iframe>
         <section id="spotify-playback" class="spotify-controls" aria-label="Spotify playback">
           <p>Only hearing 30 seconds? The embed may be playing a preview. Sign in at <a href="https://open.spotify.com/" target="_blank" rel="noopener">Spotify</a> in this browser, then reload the player. Full LCARS playback below requires Spotify Premium.</p>
           <details id="spotify-setup">
