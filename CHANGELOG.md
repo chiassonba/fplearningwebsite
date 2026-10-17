@@ -4,6 +4,12 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
+## [0.1.31] - 2026-10-17
+
+### Changed
+
+- Moved the embedded Spotify player directly below the link entry form and above connection settings and playback controls.
+
 ## [0.1.30] - 2026-10-17
 
 ### Added

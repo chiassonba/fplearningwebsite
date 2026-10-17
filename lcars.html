@@ -72,6 +72,7 @@
           <div class="spotify-input-row"><input id="spotify-link" type="url" placeholder="https://open.spotify.com/playlist/..." aria-label="Spotify content link" required><button type="submit" class="pill gold">LOAD PLAYER</button></div>
           <p id="spotify-error" role="alert"></p>
         </form>
+        <iframe id="screen-frame" title="LCARS embedded content" referrerpolicy="strict-origin-when-cross-origin" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" allowfullscreen sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-downloads"></iframe>
         <section id="spotify-playback" class="spotify-controls" aria-label="Spotify playback" hidden>
           <p>Only hearing 30 seconds? The embed may be playing a preview. Sign in at <a href="https://open.spotify.com/" target="_blank" rel="noopener">Spotify</a> in this browser, then reload the player. Full LCARS playback below requires Spotify Premium.</p>
           <details id="spotify-setup">
@@ -103,7 +104,6 @@
             <div class="spotify-seek-row"><output id="spotify-position">0:00</output><input id="spotify-seek" type="range" min="0" max="1" value="0" step="1000" aria-label="Song position"><output id="spotify-duration">0:00</output></div>
           </fieldset>
         </section>
-        <iframe id="screen-frame" title="LCARS embedded content" referrerpolicy="strict-origin-when-cross-origin" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" allowfullscreen sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-downloads"></iframe>
       </section>
     </main>
   </div>
