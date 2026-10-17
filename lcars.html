@@ -7,9 +7,9 @@
   <meta name="robots" content="noindex, nofollow, noarchive">
   <link rel="icon" type="image/png" sizes="32x32" href="images/fpl-stamp-favicon-32.png?v=20261008">
   <link rel="icon" type="image/png" sizes="64x64" href="images/fpl-stamp-favicon-64.png?v=20261008">
-  <link rel="stylesheet" href="lcars/lcars.css?v=0.1.35">
-  <script src="lcars/station.js?v=0.1.35" defer></script>
-  <script src="lcars/spotify.js?v=0.1.35" defer></script>
+  <link rel="stylesheet" href="lcars/lcars.css?v=0.1.36">
+  <script src="lcars/station.js?v=0.1.36" defer></script>
+  <script src="lcars/spotify.js?v=0.1.36" defer></script>
 </head>
 <body>
   <a class="skip" href="#command">Skip to command input</a>
@@ -68,8 +68,15 @@
         <iframe id="screen-frame" title="LCARS embedded content" referrerpolicy="strict-origin-when-cross-origin" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" allowfullscreen sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-downloads"></iframe>
       </section>
       <section id="spotify-panel" class="spotify-panel" aria-label="Spotify player" hidden>
-        <div class="spotify-dock-header"><div><span class="spotify-now-label">NOW PLAYING</span><span data-spotify-track>SUBSPACE MEDIA</span><span data-spotify-remaining>Connect Spotify for track details</span></div><button id="spotify-expand" class="pill gold" type="button">COLLAPSE PLAYER</button></div>
         <div id="spotify-panel-body">
+        <section id="spotify-app-view" class="spotify-app-view" aria-label="Spotify app playlist" hidden>
+          <div class="section-label"><h3 id="spotify-playlist-title">APP PLAYBACK</h3><a id="spotify-playlist-open" target="_blank" rel="noopener">OPEN IN SPOTIFY ↗</a></div>
+          <p id="spotify-app-track"></p>
+          <p id="spotify-playlist-status" role="status"></p>
+          <ol id="spotify-playlist-items" class="spotify-playlist-items"></ol>
+          <button id="spotify-playlist-more" class="pill silver" type="button" hidden>LOAD MORE</button>
+          <button id="spotify-playlist-access" class="pill gold" type="button" hidden>ALLOW PLAYLIST ACCESS</button>
+        </section>
         <form id="spotify-form" class="spotify-controls">
           <label for="spotify-link">SPOTIFY PLAYER</label>
           <p>Paste a Spotify playlist, album, song, artist or podcast link. Your last player is remembered on this browser.</p>

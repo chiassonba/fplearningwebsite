@@ -4,6 +4,22 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
+## [0.1.36] - 2026-10-17
+
+### Added
+
+- Added sidebar Shuffle On/Off and Repeat Off/All/One controls for the selected Spotify app, synchronized with its playback state and restrictions.
+- Added an app playlist view to Subspace Media, with current-track highlighting, paginated track lists, and an Open in Spotify fallback when playlist data is unavailable. Request playlist-read permission only through explicit Spotify authorization.
+
+### Removed
+
+- Removed the bottom Now playing bar and its expand/collapse controls, styling and reserved page space.
+- Removed the sidebar Select app shortcut. App selection remains in the Subspace Media screen.
+
+### Changed
+
+- Keep Spotify playback alive offscreen while navigating elsewhere inside LCARS, with song details and playback controls in the sidebar.
+
 ## [0.1.35] - 2026-10-17
 
 ### Added

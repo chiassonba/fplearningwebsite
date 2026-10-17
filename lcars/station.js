@@ -53,28 +53,21 @@ function setScreenSource(source){
   else frame.setAttribute('sandbox','allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-downloads');
   frame.src=source;
 }
-function dockSpotify(){
+function backgroundSpotify(){
   const panel=$('spotify-panel');if(panel.hidden)return;
-  panel.classList.add('is-docked');$('spotify-panel-body').inert=true;
-  $('spotify-expand').textContent='OPEN PLAYER';
-  document.body.classList.add('has-media-dock');
+  panel.classList.add('is-background');$('spotify-panel-body').inert=true;
 }
 function openSpotify(){
-  const panel=$('spotify-panel');panel.hidden=false;panel.classList.remove('is-docked');
-  $('spotify-panel-body').inert=false;$('spotify-expand').textContent='COLLAPSE PLAYER';
-  document.body.classList.remove('has-media-dock');
+  const panel=$('spotify-panel');panel.hidden=false;panel.classList.remove('is-background');
+  $('spotify-panel-body').inert=false;
   $('command-station').hidden=true;$('embedded-screen').hidden=false;
   $('screen-title').textContent='SUBSPACE MEDIA';$('screen-frame').hidden=true;
   $('screen-external').href=spotifyContent($('spotify-link').value)?.original||'https://open.spotify.com/';
   document.dispatchEvent(new Event('spotify-view-change'));
 }
-$('spotify-expand').addEventListener('click',()=>{
-  if($('spotify-panel').classList.contains('is-docked')){openSpotify();$('spotify-link').focus();}
-  else{showStation();$('spotify-expand').focus();}
-});
 function showStation(){
   $('screen-frame').removeAttribute('src');
-  dockSpotify();
+  backgroundSpotify();
   $('embedded-screen').hidden=true;$('command-station').hidden=false;
   (screenTrigger?.isConnected?screenTrigger:$('command')).focus();screenTrigger=null;
 }
@@ -89,7 +82,7 @@ function openScreen(url,label,trigger){
     const content=spotifyContent(destination.href)||spotifyContent(read('voyager.spotify-player',''));
     if(!$('spotify-frame').hasAttribute('src')&&!$('spotify-panel').dataset.fullPlayer&&content){$('spotify-link').value=content.original;$('spotify-frame').src=content.embed;$('spotify-frame').hidden=false;}
     openSpotify();
-  }else{dockSpotify();$('screen-frame').hidden=false;setScreenSource(destination.href);$('screen-external').href=destination.href;}
+  }else{backgroundSpotify();$('screen-frame').hidden=false;setScreenSource(destination.href);$('screen-external').href=destination.href;}
   $('command-station').hidden=true;$('embedded-screen').hidden=false;
   $('screen-title').focus();
 }
@@ -135,13 +128,12 @@ function render(){
       const track=document.createElement('span');track.dataset.spotifyTrack='';track.textContent='NOT PLAYING';
       const remaining=document.createElement('span');remaining.dataset.spotifyRemaining='';remaining.textContent='Connect Spotify for controls';
       const controls=document.createElement('div');controls.className='spotify-sidebar-buttons';
-      for(const [action,label] of [['previous','PREV'],['next','NEXT'],['toggle','PLAY'],['stop','STOP']]){
+      for(const [action,label] of [['previous','PREV'],['next','NEXT'],['toggle','PLAY'],['stop','STOP'],['shuffle','SHUFFLE: OFF'],['repeat','REPEAT: OFF']]){
         const button=document.createElement('button');button.type='button';button.dataset.spotify=action;button.textContent=label;button.disabled=true;
         button.setAttribute('aria-label',`${label==='PREV'?'Previous track':label==='NEXT'?'Next track':label==='STOP'?'Stop playback':'Play or pause'}`);controls.append(button);
       }
       const connection=document.createElement('span');connection.dataset.spotifyConnection='';
-      const setup=document.createElement('button');setup.type='button';setup.dataset.spotifySetupOpen='';setup.textContent='SELECT APP';
-      mini.append(track,remaining,connection,controls,setup);$('sidebar-links').append(mini);
+      mini.append(track,remaining,connection,controls);$('sidebar-links').append(mini);
     }
   });
   destinations.forEach((d,i)=>{
