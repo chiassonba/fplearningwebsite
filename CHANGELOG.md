@@ -4,6 +4,12 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
+## [0.1.39] - 2026-10-17
+
+### Changed
+
+- Made the decorative Spotify wave denser and noisier with three overlapping jagged traces and staggered CSS movement. Preserve pause, reduced-motion handling and existing playback updates; no audio processing or new animation timers.
+
 ## [0.1.38] - 2026-10-17
 
 ### Changed
