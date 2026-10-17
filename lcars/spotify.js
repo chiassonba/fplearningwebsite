@@ -7,6 +7,26 @@
   const scopes = 'streaming user-read-email user-read-private user-read-playback-state user-modify-playback-state playlist-read-private playlist-read-collaborative';
   let session = null, state = null, updated = 0, timer, tick, busy = false, polling = false, revision = 0, refreshTask, player, deviceId, sdkTask, cooldown = 0;
   let devices=[], selectedDevice='', lastDeviceRefresh=0;
+  let backTimer,backTrack='';
+  const backWindow=500;
+  const currentTrackKey=()=>JSON.stringify([selectedDevice||state?.device?.id,state?.item?.id||state?.item?.uri||state?.item?.name]);
+  function cancelBack(){clearTimeout(backTimer);backTimer=null;backTrack='';}
+  function previousClick(){
+    const key=currentTrackKey();
+    if(backTimer&&backTrack===key){
+      cancelBack();
+      void run(async()=>{
+        if(state?.actions?.disallows?.skipping_prev){await seek(0);return;}
+        await api('/previous','POST');message('Previous track.');
+      });
+      return;
+    }
+    cancelBack();backTrack=key;
+    backTimer=setTimeout(()=>{
+      cancelBack();if(currentTrackKey()!==key||!session)return;
+      void run(()=>seek(0));
+    },backWindow);
+  }
   let playlistKey='',playlistName='',playlistRows=[],playlistTotal=0,playlistLoading=false,playlistError='',playlistDenied=false,playlistVersion=0;
   const message = value => { el('status').textContent = value; };
   const stored = (store, name) => { try { return JSON.parse(store.getItem(name)); } catch { return null; } };
@@ -99,7 +119,7 @@
     document.querySelectorAll('[data-spotify-track]').forEach(node=>{node.textContent=title;node.title=title;});
     document.querySelectorAll('[data-spotify-remaining]').forEach(node=>{node.textContent=remaining;});
     document.querySelectorAll('[data-spotify-connection]').forEach(node=>{node.textContent=session?'LCARS controls: connected':'LCARS controls: not connected';});
-    const restrictions={previous:'skipping_prev',next:'skipping_next',back:'seeking',forward:'seeking',toggle:state?.is_playing?'pausing':'resuming',stop:'pausing',shuffle:'toggling_shuffle'};
+    const restrictions={previous:'seeking',next:'skipping_next',back:'seeking',forward:'seeking',toggle:state?.is_playing?'pausing':'resuming',stop:'pausing',shuffle:'toggling_shuffle'};
     document.querySelectorAll('[data-spotify]').forEach(button=>{
       const action=button.dataset.spotify;
       button.disabled=!session||!state?.device||!!state.device.is_restricted||(!item&&action!=='toggle')||!!allowed[restrictions[action]];
@@ -177,6 +197,7 @@
     el('device-help').textContent=devices.length?'Select your Spotify app and click Control app.':'No Spotify apps found. Open the app with the same account, start a song once, then refresh devices.';
   }
   async function useDevice(){
+    cancelBack();
     const device=devices.find(d=>d.id===el('devices').value&&!d.is_restricted);
     if(!device)throw new Error('Open Spotify and choose an available app first.');
     await api('','PUT',{device_ids:[device.id],play:false});
@@ -207,6 +228,7 @@
     finally { polling = false; schedule(); }
   }
   async function run(task) {
+    cancelBack();
     if (busy) { message('Spotify is handling another request. Try again in a moment.'); return; }
     busy = true; revision++; clearTimeout(timer);
     try { await task(); }
@@ -214,6 +236,7 @@
     finally { busy = false; schedule(400); }
   }
   function disconnect() {
+    cancelBack();
     clearTimeout(timer);clearInterval(tick);revision++; player?.disconnect(); player = null; deviceId = null;
     delete el('panel').dataset.fullPlayer;
     devices=[];lastDeviceRefresh=0;saveSession(null); sessionStorage.removeItem(pendingKey); connected(); message('Disconnected from LCARS. You can also revoke access in your Spotify account.');
@@ -256,6 +279,7 @@
     return sdkTask;
   }
   async function playHere() {
+    cancelBack();
     if (!player) {
       message('Starting the full Spotify player...');
       await sdk();
@@ -286,6 +310,7 @@
     state = null; draw(); message('FP-LCARS is ready. Click Play loaded link to start your selection.');
   }
   async function loadLink() {
+    cancelBack();
     const url = new URL(el('link').value);
     const match = url.hostname === 'open.spotify.com' && url.pathname.match(/^\/(?:intl-[a-z-]+\/)?(?:embed\/)?(track|album|playlist|artist|episode|show)\/([A-Za-z0-9]{22})\/?$/);
     if (!match) throw new Error('Paste a Spotify content link above first.');
@@ -323,6 +348,8 @@
   }));
   document.addEventListener('click', event => {
     const button=event.target.closest('button[data-spotify]');if(!button||button.disabled)return;
+    if(button.dataset.spotify==='previous'){previousClick();return;}
+    cancelBack();
     void run(async () => {
     const action = button.dataset.spotify;
     if(action==='shuffle'){
@@ -348,8 +375,8 @@
   observer.observe(el('panel'), { attributes: true, attributeFilter: ['hidden'] });
   document.addEventListener('spotify-view-change',viewChanged);
   document.addEventListener('spotify-links-rendered',drawMini);
-  document.addEventListener('visibilitychange',viewChanged);
-  window.addEventListener('pagehide', () => { clearTimeout(timer);clearInterval(tick); player?.disconnect(); });
+  document.addEventListener('visibilitychange',()=>{if(document.hidden)cancelBack();viewChanged();});
+  window.addEventListener('pagehide', () => { cancelBack();clearTimeout(timer);clearInterval(tick); player?.disconnect(); });
   connected();
   callback().then(returned => {
     connected();
