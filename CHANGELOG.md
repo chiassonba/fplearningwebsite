@@ -4,6 +4,18 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
+## [0.1.26] - 2026-10-17
+
+### Added
+
+- Added the standalone FP-LCARS command station at `lcars.html`, with isolated local CSS, JavaScript, font and original reference audio assets.
+- Applied First Principles Learning Command Station branding, top-right registry `FPL 221987`, interface label `LCARS / FPLearning`, and the FPLearning Interlink sidebar link.
+- Defaulted search to Google.ca and provided editable destinations including Google Maps, Spotify and the existing FPL Resources file library.
+- Animated the network-access scanner line through stationary rings using a lightweight CSS rotation, with a static alternative for reduced motion.
+- Kept preferences in browser local storage and supplied an optional page-audio toggle using the reference website's unchanged sound files.
+- Included font licensing, audio provenance and setup documentation. Kept the page unlisted with noindex metadata.
+- Preserved the production homepage, staging page and their existing assets.
+
 ## [0.1.25] - 2026-10-15
 
 ### Added
