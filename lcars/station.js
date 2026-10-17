@@ -87,7 +87,7 @@ function openScreen(url,label,trigger){
   $('spotify-error').textContent='';
   if(isSpotify(destination)){
     const content=spotifyContent(destination.href)||spotifyContent(read('voyager.spotify-player',''));
-    if(!$('spotify-frame').hasAttribute('src')&&!$('spotify-panel').dataset.fullPlayer&&content){$('spotify-link').value=content.original;$('spotify-frame').src=content.embed;}
+    if(!$('spotify-frame').hasAttribute('src')&&!$('spotify-panel').dataset.fullPlayer&&content){$('spotify-link').value=content.original;$('spotify-frame').src=content.embed;$('spotify-frame').hidden=false;}
     openSpotify();
   }else{dockSpotify();$('screen-frame').hidden=false;setScreenSource(destination.href);$('screen-external').href=destination.href;}
   $('command-station').hidden=true;$('embedded-screen').hidden=false;

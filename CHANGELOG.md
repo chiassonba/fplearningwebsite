@@ -4,6 +4,14 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
+## [0.1.34] - 2026-10-17
+
+### Changed
+
+- Moved local time beside the date in the top header.
+- Labeled the persistent Spotify track display Now playing and update song details directly from local player state events as well as account playback polling.
+- Kept unloaded Spotify frames hidden and restore their visibility when returning from full-player mode to the embed.
+
 ## [0.1.33] - 2026-10-17
 
 ### Added
