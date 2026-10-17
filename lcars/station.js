@@ -228,3 +228,22 @@ function clock(){const d=new Date();$('clock').textContent=d.toLocaleTimeString(
 clock();let timer=setInterval(clock,30000);
 document.addEventListener('visibilitychange',()=>{clearInterval(timer);if(!document.hidden){clock();timer=setInterval(clock,30000);}});
 render();soundLabel();
+
+// Request search focus once after the new-tab redirect finishes loading.
+(() => {
+  let interacted=false;
+  const markInteraction=()=>{interacted=true;};
+  document.addEventListener('pointerdown',markInteraction,{once:true,capture:true});
+  document.addEventListener('keydown',markInteraction,{once:true,capture:true});
+  function focusSearch(){
+    document.removeEventListener('pointerdown',markInteraction,true);
+    document.removeEventListener('keydown',markInteraction,true);
+    const command=$('command');
+    if(interacted||document.hidden||!command.getClientRects().length)return;
+    if(document.activeElement!==document.body&&document.activeElement!==command)return;
+    window.focus();
+    command.focus({preventScroll:true});
+  }
+  if(document.readyState==='complete')requestAnimationFrame(focusSearch);
+  else window.addEventListener('load',()=>requestAnimationFrame(focusSearch),{once:true});
+})();

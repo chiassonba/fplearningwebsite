@@ -4,6 +4,12 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
+## [0.1.43] - 2026-10-17
+
+### Changed
+
+- Request focus in LCARS search once after page load, skipping hidden pages and users already interacting with controls. Browser address-bar focus policies can still take precedence.
+
 ## [0.1.42] - 2026-10-17
 
 ### Changed
