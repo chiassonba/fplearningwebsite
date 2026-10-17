@@ -4,6 +4,14 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
+## [0.1.38] - 2026-10-17
+
+### Changed
+
+- Moved the decorative sidebar wave immediately below the track title and remaining time.
+- Back now waits 500 ms to distinguish one click (restart the current song) from two clicks (play the previous track).
+- Cancel pending restart actions when another control is used, playback context changes, the tab is hidden or controls disconnect. Respect seek and previous-track restrictions.
+
 ## [0.1.37] - 2026-10-17
 
 ### Added

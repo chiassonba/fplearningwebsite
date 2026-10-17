@@ -128,12 +128,13 @@ function render(){
       const track=document.createElement('span');track.dataset.spotifyTrack='';track.textContent='NOT PLAYING';
       const remaining=document.createElement('span');remaining.dataset.spotifyRemaining='';remaining.textContent='Connect Spotify for controls';
       const controls=document.createElement('div');controls.className='spotify-sidebar-buttons';
-      for(const [action,label] of [['previous','PREV'],['next','NEXT'],['toggle','PLAY'],['stop','STOP'],['shuffle','SHUFFLE: OFF'],['repeat','REPEAT: OFF']]){
+      for(const [action,label] of [['previous','BACK'],['next','NEXT'],['toggle','PLAY'],['stop','STOP'],['shuffle','SHUFFLE: OFF'],['repeat','REPEAT: OFF']]){
         const button=document.createElement('button');button.type='button';button.dataset.spotify=action;button.textContent=label;button.disabled=true;
-        button.setAttribute('aria-label',`${label==='PREV'?'Previous track':label==='NEXT'?'Next track':label==='STOP'?'Stop playback':'Play or pause'}`);controls.append(button);
+        button.setAttribute('aria-label',`${label==='BACK'?'Back: click once to restart, twice for previous track':label==='NEXT'?'Next track':label==='STOP'?'Stop playback':'Play or pause'}`);controls.append(button);
+        if(action==='previous')button.title='One click restarts. Two clicks within half a second play the previous track.';
       }
       const connection=document.createElement('span');connection.dataset.spotifyConnection='';
-      mini.append(track,$('spotify-signal-template').content.cloneNode(true),remaining,connection,controls);$('sidebar-links').append(mini);
+      mini.append(track,remaining,$('spotify-signal-template').content.cloneNode(true),connection,controls);$('sidebar-links').append(mini);
     }
   });
   destinations.forEach((d,i)=>{
