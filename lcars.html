@@ -65,7 +65,13 @@
           <a id="screen-external" class="pill peach" target="_blank" rel="noopener">OPEN IN NEW TAB ↗</a>
         </div>
         <p class="screen-hint">If a page cannot display here, use Open in new tab.</p>
-        <iframe id="screen-frame" title="LCARS embedded content" referrerpolicy="strict-origin-when-cross-origin" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-downloads"></iframe>
+        <form id="spotify-form" class="spotify-controls" hidden>
+          <label for="spotify-link">SPOTIFY PLAYER</label>
+          <p>Paste a Spotify playlist, album, song, artist or podcast link. Your last player is remembered on this browser.</p>
+          <div class="spotify-input-row"><input id="spotify-link" type="url" placeholder="https://open.spotify.com/playlist/..." aria-label="Spotify content link" required><button type="submit" class="pill gold">LOAD PLAYER</button></div>
+          <p id="spotify-error" role="alert"></p>
+        </form>
+        <iframe id="screen-frame" title="LCARS embedded content" referrerpolicy="strict-origin-when-cross-origin" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" allowfullscreen sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-downloads"></iframe>
       </section>
     </main>
   </div>

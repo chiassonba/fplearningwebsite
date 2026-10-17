@@ -17,10 +17,18 @@ const sidebarDefaults=[
 function read(key,fallback){try{return JSON.parse(localStorage.getItem(key))??fallback;}catch{return fallback;}}
 function write(key,value){try{localStorage.setItem(key,JSON.stringify(value));return true;}catch{$('storage-status').textContent='STORAGE UNAVAILABLE';return false;}}
 function safeURL(value){try{const u=new URL(value);return ['https:','http:'].includes(u.protocol)?u:null;}catch{return null;}}
+function isSpotify(url){return ['spotify.com','www.spotify.com','open.spotify.com'].includes(url.hostname);}
+function spotifyContent(value){
+  const url=safeURL(value);if(!url||url.hostname!=='open.spotify.com')return null;
+  const match=url.pathname.match(/^\/(?:intl-[a-z-]+\/)?(?:embed\/)?(playlist|album|track|artist|show|episode)\/([A-Za-z0-9]{22})\/?$/i);
+  if(!match)return null;
+  const entity=`${match[1].toLowerCase()}/${match[2]}`;
+  return {embed:`https://open.spotify.com/embed/${entity}`,original:`https://open.spotify.com/${entity}`};
+}
 function destinationMode(d){
   if(['screen','tab'].includes(d.mode))return d.mode;
   const url=safeURL(d.url);
-  return url&&(url.origin===location.origin||['fplearning.ca','www.fplearning.ca'].includes(url.hostname))?'screen':'tab';
+  return url&&(isSpotify(url)||url.origin===location.origin||['fplearning.ca','www.fplearning.ca'].includes(url.hostname))?'screen':'tab';
 }
 let saved=read('voyager.destinations',defaults);
 function validLinks(value){return Array.isArray(value)&&value.every(d=>d&&typeof d.name==='string'&&d.name.trim()&&safeURL(d.url));}
@@ -42,9 +50,15 @@ if(storedLinks&&validLinks(storedLinks.destinations)&&validLinks(storedLinks.sid
 let sidebarLinks=storedLinks&&validLinks(storedLinks.destinations)&&validLinks(storedLinks.sidebar)?storedLinks.sidebar:sidebarDefaults;
 destinations=destinations.map(d=>({...d,mode:destinationMode(d)}));
 sidebarLinks=sidebarLinks.map(d=>({...d,mode:destinationMode(d)}));
+if(read('voyager.spotify-version',0)<1){
+  const upgrade=d=>d.name.trim().toUpperCase()==='SUBSPACE MEDIA'&&isSpotify(new URL(d.url))&&new URL(d.url).pathname==='/'?{...d,mode:'screen'}:d;
+  destinations=destinations.map(upgrade);sidebarLinks=sidebarLinks.map(upgrade);
+  if(write('voyager.links',{destinations,sidebar:sidebarLinks}))write('voyager.spotify-version',1);
+}
 let screenTrigger;
 function showStation(){
   $('screen-frame').removeAttribute('src');
+  $('spotify-form').hidden=true;$('spotify-error').textContent='';
   $('embedded-screen').hidden=true;$('command-station').hidden=false;
   (screenTrigger?.isConnected?screenTrigger:$('command')).focus();screenTrigger=null;
 }
@@ -53,12 +67,26 @@ function openScreen(url,label,trigger){
   if(destination.origin===location.origin&&destination.pathname===location.pathname){showStation();return;}
   screenTrigger=trigger;
   $('screen-title').textContent=label;
-  $('screen-external').href=destination.href;
   $('screen-frame').title=`${label} in the LCARS screen`;
-  $('screen-frame').src=destination.href;
+  $('spotify-error').textContent='';
+  $('spotify-form').hidden=!isSpotify(destination);
+  if(isSpotify(destination)){
+    const content=spotifyContent(destination.href)||spotifyContent(read('voyager.spotify-player',''));
+    $('spotify-link').value=content?content.original:'';
+    $('screen-frame').hidden=!content;
+    if(content){$('screen-frame').src=content.embed;$('screen-external').href=content.original;}
+    else{$('screen-frame').removeAttribute('src');$('screen-external').href=destination.href;}
+  }else{$('screen-frame').hidden=false;$('screen-frame').src=destination.href;$('screen-external').href=destination.href;}
   $('command-station').hidden=true;$('embedded-screen').hidden=false;
   $('screen-title').focus();
 }
+$('spotify-form').addEventListener('submit',e=>{
+  e.preventDefault();const content=spotifyContent($('spotify-link').value.trim());
+  if(!content){$('spotify-error').textContent='Use a Spotify playlist, album, song, artist, show or episode link from open.spotify.com.';return;}
+  $('spotify-error').textContent='';$('screen-frame').src=content.embed;$('screen-frame').hidden=false;
+  $('screen-frame').title='Spotify player';$('screen-external').href=content.original;
+  if(!write('voyager.spotify-player',content.original))$('spotify-error').textContent='Player loaded. This browser could not remember your selection.';
+});
 $('screen-home').addEventListener('click',showStation);
 $('navigation-home').addEventListener('click',e=>{e.preventDefault();showStation();$('command').focus();});
 function prepareLink(link,d){
