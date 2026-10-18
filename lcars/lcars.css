@@ -80,3 +80,19 @@ body.media-view .spotify-sidebar,body.music-playing .spotify-sidebar{display:blo
 .system-theme-control { display:flex; flex-direction:column; gap:8px; margin:20px 0; }
 .system-theme-control select { max-width:none; width:100%; border:1px solid var(--silver); padding:12px; }
 .system-theme-control small { color:var(--silver); }
+
+/* Compact local DataHub screen. Other embedded sites keep their existing layout. */
+.embedded-screen.is-datahub { display:flex; flex-direction:column; padding-top:0; --datahub-top-trim:72px; }
+.embedded-screen.is-datahub .screen-viewport { order:0; overflow:hidden; }
+.embedded-screen.is-datahub #screen-frame { margin-top:calc(-1 * var(--datahub-top-trim)); }
+.embedded-screen.is-datahub .screen-toolbar { order:1; padding-top:14px; gap:12px; }
+.embedded-screen.is-datahub .screen-toolbar h2 { order:0; font-size:20px; min-width:0; }
+.embedded-screen.is-datahub #screen-external { order:1; }
+.embedded-screen.is-datahub #screen-home { order:2; }
+.embedded-screen.is-datahub .screen-toolbar .pill { min-height:42px; padding:12px 20px; }
+.embedded-screen.is-datahub .screen-hint { order:2; margin:10px 0 0; }
+@media(max-width:760px) {
+  .embedded-screen.is-datahub .screen-toolbar { justify-content:flex-end; }
+  .embedded-screen.is-datahub .screen-toolbar h2 { flex-basis:100%; }
+  .embedded-screen.is-datahub .screen-toolbar .pill { font-size:12px; padding:12px; }
+}

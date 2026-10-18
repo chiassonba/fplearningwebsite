@@ -94,6 +94,7 @@ let dataHubActive = false;
 function resetDataHub() {
   dataHubActive = false;
   dataHubOrigin = null;
+  $('embedded-screen').classList.remove('is-datahub');
   $('screen-frame').style.removeProperty('height');
   $('datahub-navigation').hidden = true;
   document.querySelectorAll('[data-local-datahub-link]').forEach(link=>{link.hidden=false;});
@@ -113,6 +114,7 @@ function dataHubSource(source) {
   embedded.searchParams.set('embed', 'true');
   embedded.searchParams.set('lcars', '1');
   dataHubActive = true;
+  $('embedded-screen').classList.add('is-datahub');
   $('datahub-navigation').hidden = false;
   document.querySelectorAll('[data-local-datahub-link]').forEach(link=>{link.hidden=true;});
   $('datahub-navigation').open = true;
@@ -193,7 +195,7 @@ function openScreen(url,label,trigger){
     openSpotify();
   }else{backgroundSpotify();$('screen-frame').hidden=false;setScreenSource(destination.href);$('screen-external').href=destination.href;}
   $('command-station').hidden=true;$('embedded-screen').hidden=false;
-  $('screen-title').focus();
+  $('screen-title').focus({preventScroll:true});
 }
 $('spotify-form').addEventListener('submit',e=>{
   e.preventDefault();const content=spotifyContent($('spotify-link').value.trim());
