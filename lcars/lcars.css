@@ -13,7 +13,7 @@
 .rings i{animation:thinking-sweep 5s linear infinite;transform-origin:center}
 @media(prefers-reduced-motion:reduce){.rings i{animation:none}}
 
-[hidden]{display:none!important}.embedded-screen{padding-top:22px}.screen-toolbar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}.screen-toolbar h2{font-size:24px;margin:0;flex:1;min-width:120px;overflow-wrap:anywhere}.screen-hint{font-size:12px;color:var(--silver);margin:12px 0}.embedded-screen iframe{display:block;width:100%;height:clamp(420px,70vh,1000px);border:2px solid var(--silver);background:#0a0f1a}.edit-row{grid-template-columns:1fr 2fr 120px}.edit-row select{background:#11151d;border:1px solid var(--silver);padding:10px;color:var(--peach);width:100%;max-width:none;font-family:Arial,sans-serif;font-size:13px}@media(max-width:760px){.edit-row{grid-template-columns:1fr}.screen-toolbar h2{flex-basis:100%;order:-1}.embedded-screen iframe{height:70vh;min-height:420px}.screen-toolbar .pill{font-size:10px;padding:12px;gap:8px}}
+[hidden]{display:none!important}.embedded-screen{padding-top:22px}.screen-toolbar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}.screen-toolbar h2{font-size:24px;margin:0;flex:1;min-width:120px;overflow-wrap:anywhere}.screen-hint{font-size:12px;color:var(--silver);margin:12px 0}.embedded-screen iframe{display:block;width:100%;height:clamp(420px,70vh,1000px);border:0;background:#0a0f1a}.edit-row{grid-template-columns:1fr 2fr 120px}.edit-row select{background:#11151d;border:1px solid var(--silver);padding:10px;color:var(--peach);width:100%;max-width:none;font-family:Arial,sans-serif;font-size:13px}@media(max-width:760px){.edit-row{grid-template-columns:1fr}.screen-toolbar h2{flex-basis:100%;order:-1}.embedded-screen iframe{height:70vh;min-height:420px}.screen-toolbar .pill{font-size:10px;padding:12px;gap:8px}}
 
 .sidebar-links>a{display:flex;align-items:flex-end;justify-content:flex-end;min-height:68px;padding:15px;text-decoration:none;border-bottom:8px solid #000;font-size:16px;overflow-wrap:anywhere}.edit-list-label{display:block;font-size:12px;color:var(--silver);margin-bottom:6px}#edit-list{max-width:none;width:100%;padding:10px;border:1px solid var(--silver);color:var(--peach);background:#11151d}.edit-actions{grid-column:1/-1;display:flex;gap:8px;padding-bottom:12px;border-bottom:1px solid var(--pewter)}.edit-actions button{padding:8px 14px;border-radius:20px;background:var(--silver);color:#000;font-size:13px}.edit-actions button:last-child{margin-left:auto;background:var(--peach)}.edit-actions button:disabled{opacity:.4;cursor:default}@media(max-width:1100px){.sidebar-links>a{font-size:14px}}@media(max-width:760px){.sidebar-links>a{font-size:12px;padding:12px 8px;min-height:75px}}
 
@@ -49,7 +49,7 @@
 /* App controls are only present while DataHub occupies the screen. */
 .datahub-navigation[hidden] { display:none; }
 .datahub-navigation { border-bottom:8px solid #000; background:#828cad; color:#000; }
-.datahub-navigation summary { cursor:pointer; padding:14px 12px; text-align:right; }
+.datahub-navigation summary { cursor:pointer; min-height:58px; padding:18px 12px; text-align:right; background:var(--peach); color:#000; }
 .datahub-navigation nav { display:flex; flex-direction:column; gap:6px; background:#000; }
 .datahub-navigation button { border:0; border-radius:0; min-height:44px; padding:10px 12px;
   text-align:right; background:#828cad; color:#000; font:inherit; cursor:pointer; }
@@ -64,3 +64,5 @@
 /* Expand media controls only for the open media screen or active playback. */
 .spotify-sidebar{display:none}
 body.media-view .spotify-sidebar,body.music-playing .spotify-sidebar{display:block}
+
+.link-tools-hint{grid-column:1/-1;color:var(--gold);font-size:12px;letter-spacing:.04em}
