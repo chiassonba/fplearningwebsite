@@ -67,6 +67,7 @@ function resetDataHub() {
   dataHubOrigin = null;
   $('screen-frame').style.removeProperty('height');
   $('datahub-navigation').hidden = true;
+  document.querySelectorAll('[data-local-datahub-link]').forEach(link=>{link.hidden=false;});
   document.querySelectorAll('[datahub-page]').forEach(button => {
     button.disabled = true;
     button.removeAttribute('aria-current');
@@ -84,6 +85,7 @@ function dataHubSource(source) {
   embedded.searchParams.set('lcars', '1');
   dataHubActive = true;
   $('datahub-navigation').hidden = false;
+  document.querySelectorAll('[data-local-datahub-link]').forEach(link=>{link.hidden=true;});
   $('datahub-navigation').open = true;
   $('datahub-status').textContent = 'START LOCAL DATAHUB';
   return embedded.href;
@@ -196,11 +198,18 @@ function chirp(kind='letter'){
   }catch{/* Sound is optional if this browser restricts audio. */}
 }
 function render(){
+  const dataHubNavigation=$('datahub-navigation');
+  dataHubNavigation.remove();
   $('destinations').replaceChildren();
   $('sidebar-links').replaceChildren();
   destinations.forEach((d,i)=>{
     const link=document.createElement('a');link.className=['peach','blue','silver','earth'][i%4];
     prepareLink(link,d);link.textContent=`${String(i+1).padStart(2,'0')} / ${d.name}`;$('sidebar-links').append(link);
+    if(DATAHUB_ORIGINS.includes(new URL(d.url).origin)){
+      link.dataset.localDatahubLink='';link.hidden=dataHubActive;
+      $('datahub-summary').textContent=link.textContent;
+      $('sidebar-links').append(dataHubNavigation);
+    }
     if(isSpotify(new URL(d.url))){
       const mini=document.createElement('section');mini.className='spotify-sidebar';mini.id=`spotify-sidebar-${i}`;
       link.dataset.spotifyNavigation='';link.setAttribute('aria-controls',mini.id);mini.setAttribute('aria-label',`${d.name} playback`);
@@ -216,6 +225,7 @@ function render(){
       mini.append(track,remaining,$('spotify-signal-template').content.cloneNode(true),connection,controls);$('sidebar-links').append(mini);
     }
   });
+  if(!dataHubNavigation.isConnected){dataHubNavigation.hidden=true;$('sidebar-links').append(dataHubNavigation);}
   destinations.forEach((d,i)=>{
     const a=document.createElement('a');a.className='destination';prepareLink(a,d);
     a.style.setProperty('--tile',['#ffe1ca','#55a7ff','#828cad','#cc9966','#99ccff','#ffbb33'][i%6]);
