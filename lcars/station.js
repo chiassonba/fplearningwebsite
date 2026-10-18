@@ -24,6 +24,13 @@ const defaults = [
 ];
 function read(key,fallback){try{return JSON.parse(localStorage.getItem(key))??fallback;}catch{return fallback;}}
 function write(key,value){try{localStorage.setItem(key,JSON.stringify(value));return true;}catch{$('storage-status').textContent='STORAGE UNAVAILABLE';return false;}}
+// This preference belongs only to the homepage, not the embedded DataHub.
+function homepageTheme(){return read('lcars.homepage-theme','voyager')==='picard'?'picard':'voyager';}
+function applyHomepageTheme(){
+  const theme=homepageTheme();document.documentElement.dataset.lcarsTheme=theme;
+  $('homepage-theme').value=theme;
+  $('palette-reference').href=`https://www.thelcars.com/themes/${theme}.html`;
+}
 function safeURL(value){try{const u=new URL(value);return ['https:','http:'].includes(u.protocol)?u:null;}catch{return null;}}
 function isLocalDataHub(url){return !!url&&['http://localhost:8501','http://127.0.0.1:8501'].includes(url.origin);}
 function isSpotify(url){return ['spotify.com','www.spotify.com','open.spotify.com'].includes(url.hostname);}
@@ -335,6 +342,7 @@ function renderEditor(){
   });
 }
 $('edit').addEventListener('click',()=>{
+  $('homepage-theme').value=homepageTheme();
   editDrafts=destinations.map(d=>({...d}));renderEditor();$('editor').showModal();
 });
 $('add-link').addEventListener('click',()=>{
@@ -354,12 +362,13 @@ $('edit-form').addEventListener('submit',e=>{
   const next=editDrafts.map(d=>({...d,name:d.name.trim(),url:d.url.trim()}));
   if(!validLinks(next)){$('edit-error').textContent='ENTER A LABEL AND A VALID HTTP OR HTTPS ADDRESS FOR EVERY LINK.';return;}
   if(!write('voyager.shared-links',next)){$('edit-error').textContent='THIS BROWSER COULD NOT SAVE YOUR LINKS. CHECK LOCAL STORAGE SETTINGS.';return;}
-  destinations=next;render();$('editor').close();
+  if(!write('lcars.homepage-theme',$('homepage-theme').value)){$('edit-error').textContent='THIS BROWSER COULD NOT SAVE YOUR THEME.';return;}
+  applyHomepageTheme();destinations=next;render();$('editor').close();
 });
 function clock(){const d=new Date();$('clock').textContent=d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit',hour12:false});$('clock').dateTime=d.toISOString();$('date').textContent=d.toLocaleDateString([],{year:'numeric',month:'short',day:'2-digit'}).toUpperCase();}
 clock();let timer=setInterval(clock,30000);
 document.addEventListener('visibilitychange',()=>{clearInterval(timer);if(!document.hidden){clock();timer=setInterval(clock,30000);}});
-render();soundLabel();
+applyHomepageTheme();render();soundLabel();
 
 // Request search focus once after the new-tab redirect finishes loading.
 (() => {

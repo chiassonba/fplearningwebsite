@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: /lcars.html
+Disallow: /lcars/
+Disallow: /datahub.html
