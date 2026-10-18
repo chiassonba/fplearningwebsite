@@ -279,24 +279,21 @@ function prepareLink(link,d){
   }else{link.target='_blank';link.rel='noopener';link.setAttribute('aria-label',`${d.name}, opens in a new tab`);}
 }
 let sound=read('voyager.sound',!/OPR\//.test(navigator.userAgent))===true;
-const samples=Object.fromEntries(Object.entries({letter:'beep2',space:'beep1',enter:'beep4',backspace:'beep3'}).map(([kind,file])=>{
-  const sample=new Audio(`lcars/assets/audio/${file}.mp3`);sample.preload='auto';sample.volume=.35;return [kind,sample];
-}));
+const pageBeep=new Audio('lcars/assets/audio/beep1.mp3');
+pageBeep.preload='auto';pageBeep.volume=.35;
 let activeSample;
-function chirp(kind='letter'){
+function chirp(){
   if(!sound)return;
   try{
-    activeSample?.pause();activeSample=samples[kind]||samples.letter;activeSample.currentTime=0;
+    activeSample?.pause();activeSample=pageBeep;activeSample.currentTime=0;
     void activeSample.play().catch(()=>{});
   }catch{/* Sound is optional if this browser restricts audio. */}
 }
-// One delegated listener also covers links rebuilt by System Configuration.
-const navigationChirps=['letter','space','enter','backspace'];
-let navigationChirpIndex=0;
+// One delegated listener also covers controls rebuilt by System Configuration.
 document.addEventListener('click',event=>{
-  const control=event.target.closest?.('#sidebar-links > a, .destination, #datahub-navigation > summary, [datahub-page], #screen-home, #navigation-home');
-  if(!control||control.disabled||!sound)return;
-  chirp(navigationChirps[navigationChirpIndex++ % navigationChirps.length]);
+  const control=event.target.closest?.('a, button, summary, select, input[type="checkbox"], [role="tab"]');
+  if(!control||control.disabled||control.id==='sound'||!sound)return;
+  chirp();
 },true);
 function render(){
   const dataHubNavigation=$('datahub-navigation');
