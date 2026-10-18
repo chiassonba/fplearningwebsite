@@ -4,6 +4,14 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
+## [0.1.48] - 2026-10-18
+
+### Added
+
+- Publish the public Math Lab at /math-lab/ with single-line function input, graphs, selectable x and h, first-principles algebra rendered with local KaTeX, and experiment export/replay.
+- Include editable standalone component source and pinned build dependencies in math-lab-source/.
+- Retain the existing root domain, landing page and hosting. Notebook development remains on hold; this entry point contains no classroom backend.
+
 ## [0.1.47] - 2026-10-17
 
 ### Added

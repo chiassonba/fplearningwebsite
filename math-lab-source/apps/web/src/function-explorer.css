@@ -1,0 +1,530 @@
+.function-explorer {
+  padding: 48px 0 64px;
+  border-top: 1px solid var(--line);
+}
+.lab-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 16px;
+}
+.lab-heading h2 {
+  margin: 8px 0;
+  font-size: 38px;
+}
+.function-explorer h3 {
+  font-family: Georgia, serif;
+  font-size: 27px;
+  margin: 8px 0 16px;
+}
+.function-explorer h4 {
+  font-size: 15px;
+  font-weight: 400;
+  margin: 0 0 6px;
+}
+.lab-layout {
+  display: grid;
+  grid-template-columns: minmax(210px, 260px) minmax(0, 1fr);
+  gap: 24px;
+  margin-top: 28px;
+}
+.lab-controls,
+.lab-results,
+.lab-rates,
+.lab-capture {
+  min-width: 0;
+}
+.lab-controls {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 20px;
+  align-self: start;
+}
+.function-explorer label {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+.function-explorer input:not([type='checkbox']):not([type='range']),
+.function-explorer select,
+.function-explorer textarea {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  min-height: 42px;
+  padding: 8px 10px;
+  margin-top: 5px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--paper);
+  color: var(--ink);
+  font: inherit;
+}
+.function-explorer textarea {
+  min-height: 85px;
+  resize: vertical;
+}
+.function-explorer input[type='range'] {
+  width: 100%;
+  min-height: 30px;
+  accent-color: var(--accent);
+}
+.function-explorer :is(input, select, textarea):focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+}
+.function-explorer button {
+  padding: 8px 14px;
+  margin: 6px 8px 6px 0;
+  min-height: 42px;
+  background: var(--button);
+  color: var(--button-ink);
+  border: 0;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+.function-explorer button:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+.lab-number {
+  margin-bottom: 14px;
+}
+.lab-number label {
+  margin: 0;
+}
+.lab-hint,
+.lab-approach p,
+.lab-approach span {
+  color: var(--muted);
+  font-size: 12px;
+}
+.lab-error {
+  color: var(--failure);
+  font-size: 13px;
+}
+.lab-equation {
+  font-family: Georgia, serif;
+  font-size: 23px;
+  overflow-wrap: anywhere;
+  padding: 10px 0 18px;
+}
+.lab-graph-card {
+  border: 1px solid var(--line);
+  background: var(--plot);
+  color: var(--plot-ink);
+  border-radius: 8px;
+  padding: 12px;
+}
+.lab-graph {
+  width: 100%;
+  display: block;
+  overflow: hidden;
+  font-size: 12px;
+}
+.lab-graph text {
+  fill: var(--plot-muted);
+}
+.lab-grid line {
+  stroke: var(--plot-muted);
+  stroke-opacity: 0.17;
+}
+.lab-axis {
+  stroke: var(--plot-muted);
+  stroke-width: 1.4;
+}
+.lab-curve,
+.lab-baseline {
+  fill: none;
+  stroke-width: 2.2;
+}
+.lab-curve {
+  stroke: var(--plot-gold);
+}
+.lab-baseline {
+  stroke: var(--plot-muted);
+  stroke-dasharray: 5 6;
+  stroke-width: 1.4;
+}
+.lab-asymptote {
+  stroke: var(--plot-muted);
+  stroke-dasharray: 2 6;
+  stroke-opacity: 0.65;
+}
+.lab-secant,
+.lab-tangent {
+  stroke: var(--plot-secondary);
+  stroke-width: 2;
+  stroke-dasharray: 12 5;
+}
+.lab-tangent {
+  stroke-dasharray: 2 4;
+}
+.lab-point-p {
+  fill: var(--plot-gold);
+  stroke: var(--plot);
+  stroke-width: 2;
+}
+.lab-point-q {
+  fill: var(--plot-secondary);
+  stroke: var(--plot);
+  stroke-width: 2;
+}
+.lab-graph .lab-point-label {
+  fill: var(--plot-ink);
+  font-size: 15px;
+}
+.lab-hole {
+  fill: var(--plot);
+  stroke: var(--plot-gold);
+  stroke-width: 2;
+}
+.lab-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  font-size: 11px;
+  padding: 6px 0 10px;
+  color: var(--plot-ink);
+}
+.lab-graph-card .lab-hint {
+  color: var(--plot-muted);
+}
+.lab-details {
+  border-top: 1px solid var(--line);
+  padding: 14px 0;
+  margin-top: 14px;
+}
+.lab-details summary {
+  cursor: pointer;
+  font-size: 14px;
+  padding: 3px 0 9px;
+}
+.lab-four,
+.lab-rate-controls {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+.lab-facts {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 20px;
+  margin-top: 20px;
+}
+.function-explorer dl {
+  margin: 0;
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+.function-explorer dl div {
+  padding: 8px 0;
+  border-bottom: 1px solid var(--line);
+}
+.function-explorer dt {
+  color: var(--muted);
+  font-size: 12px;
+}
+.function-explorer dd {
+  margin: 3px 0 10px;
+  white-space: pre-wrap;
+}
+.lab-table-wrap {
+  min-width: 0;
+  overflow-x: auto;
+}
+.function-explorer table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+.function-explorer caption {
+  text-align: left;
+  padding-bottom: 12px;
+  color: var(--muted);
+  font-size: 12px;
+}
+.function-explorer th {
+  font-weight: 400;
+  text-align: left;
+  color: var(--muted);
+}
+.function-explorer td,
+.function-explorer th {
+  padding: 8px;
+  border-bottom: 1px solid var(--line);
+}
+.lab-check {
+  display: flex !important;
+  align-items: center;
+  gap: 8px;
+}
+.function-explorer fieldset {
+  border: 1px solid var(--line);
+  margin: 14px 0;
+  min-width: 0;
+}
+.function-explorer legend {
+  font-size: 12px;
+}
+.lab-rates,
+.lab-capture {
+  margin-top: 32px;
+  padding: 24px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+.lab-rate-controls {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-top: 20px;
+}
+.lab-readings {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 20px;
+  padding: 16px 0;
+  font-variant-numeric: tabular-nums;
+}
+.lab-algebra {
+  padding-left: 24px;
+}
+.lab-algebra li {
+  margin: 20px 0;
+  padding-left: 8px;
+}
+.lab-math {
+  font-family: 'Cambria Math', Georgia, serif;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+.lab-writing {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+.lab-captures {
+  padding-left: 22px;
+}
+.lab-captures li {
+  padding: 8px 0;
+}
+.lab-captures span {
+  display: block;
+}
+.lab-replay {
+  padding: 16px;
+  border: 1px solid var(--accent);
+  margin: 16px 0;
+}
+@media (max-width: 1000px) {
+  .lab-rate-controls {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .lab-facts {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 700px) {
+  .lab-layout {
+    grid-template-columns: 1fr;
+  }
+  .lab-controls {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+  .lab-controls > label:first-child {
+    grid-column: 1/-1;
+  }
+  .lab-controls .lab-number {
+    margin: 0;
+  }
+  .lab-rates,
+  .lab-capture {
+    padding: 16px;
+  }
+  .lab-heading h2 {
+    font-size: 30px;
+  }
+}
+@media (max-width: 420px) {
+  .lab-heading {
+    align-items: start;
+    flex-direction: column;
+  }
+  .lab-controls,
+  .lab-rate-controls,
+  .lab-writing,
+  .lab-readings {
+    grid-template-columns: 1fr;
+  }
+  .lab-graph-card {
+    padding: 3px;
+  }
+  .lab-legend,
+  .lab-graph-card > .lab-hint {
+    padding: 8px;
+  }
+}
+
+.lab-investigation {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 235px;
+  gap: 16px;
+  align-items: start;
+}
+.lab-investigation .lab-graph-card {
+  position: sticky;
+  top: 16px;
+}
+.lab-probe {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 14px;
+  min-width: 0;
+}
+.lab-probe .lab-rate-controls {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 12px;
+}
+.lab-probe .lab-approach {
+  grid-column: 1/-1;
+}
+.lab-probe .lab-readings {
+  grid-template-columns: 1fr;
+  font-size: 13px;
+}
+@media (max-width: 1100px) {
+  .lab-layout {
+    grid-template-columns: 1fr;
+  }
+  .lab-controls {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+  }
+}
+@media (max-width: 700px) {
+  .lab-controls {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .lab-investigation {
+    grid-template-columns: 1fr;
+  }
+  .lab-investigation .lab-graph-card {
+    position: static;
+  }
+  .lab-probe .lab-readings {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 420px) {
+  .lab-controls {
+    grid-template-columns: 1fr;
+  }
+  .lab-probe .lab-readings {
+    grid-template-columns: 1fr;
+  }
+}
+
+.math-display {
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 10px 4px 14px;
+  font-size: 1.12rem;
+}
+.math-display .katex-display {
+  text-align: left;
+  margin: 0.35em 0;
+}
+.math-display .katex-display > .katex {
+  text-align: left;
+}
+.math-display:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+}
+.math-inline {
+  font-size: 1em;
+}
+.lab-equation .math-display {
+  font-size: 1.2rem;
+  padding: 4px 0 10px;
+}
+.lab-algebra {
+  list-style: none;
+  padding: 0;
+  counter-reset: algebra-step;
+}
+.lab-algebra li {
+  counter-increment: algebra-step;
+  padding: 20px 24px;
+  margin: 16px 0;
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--accent);
+  border-radius: 6px;
+  background: var(--paper);
+}
+.lab-algebra h4 {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  font-size: 17px;
+  line-height: 1.5;
+}
+.lab-algebra h4::before {
+  content: counter(algebra-step, decimal-leading-zero);
+  color: var(--accent);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+.lab-step-note {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.7;
+  margin: 10px 0;
+}
+@media (max-width: 700px) {
+  .lab-algebra li {
+    padding: 16px 12px;
+  }
+  .math-display {
+    font-size: 1rem;
+  }
+}
+
+.function-input {
+  padding: 18px 20px;
+  margin: 24px 0;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+.function-input > div {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+.function-input input {
+  font-size: 20px !important;
+  font-family: 'Cambria Math', Georgia, serif !important;
+  flex: 1;
+}
+.function-input button {
+  flex-shrink: 0;
+}
+@media (max-width: 600px) {
+  .function-input > div {
+    display: block;
+  }
+}

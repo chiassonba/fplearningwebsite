@@ -67,3 +67,7 @@ Reference: https://docs.github.com/en/pages/configuring-a-custom-domain-for-your
 - JavaScript uses history replacement; an immediate HTML refresh also works when JavaScript is disabled. A branded Open DataHub link remains available if automatic navigation is blocked.
 - The address bar changes to the hosted app's address. This page does not embed Streamlit, proxy its login, store credentials, or provide the application's persistent storage.
 - The entry page is unlisted in public navigation and has `noindex, nofollow, noarchive` metadata. The public landing page and existing site resources are unchanged.
+
+## Math Lab
+
+The public Function Explorer is served at https://fplearning.ca/math-lab/. Editable source and build instructions are in math-lab-source/. The committed math-lab/ directory is ready for the existing root GitHub Pages deployment. No additional domain, DNS record or server is required. Notebook development is on hold.

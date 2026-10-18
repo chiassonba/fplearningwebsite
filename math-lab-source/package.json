@@ -1,0 +1,28 @@
+{
+  "name": "fpl-math-lab",
+  "version": "0.2.0-alpha.9",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24.0.0 <25"
+  },
+  "scripts": {
+    "build": "node build.mjs",
+    "test": "vitest run packages/function-explorer/src"
+  },
+  "dependencies": {
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "katex": "0.19.0",
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "vite": "8.3.4",
+    "@vitejs/plugin-react": "6.1.2",
+    "vitest": "5.0.4",
+    "typescript": "5.9.3",
+    "@types/node": "24.10.1",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0"
+  }
+}
