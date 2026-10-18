@@ -208,7 +208,7 @@ function render(){
     prepareLink(link,d);link.textContent=`${String(i+1).padStart(2,'0')} / ${d.name}`;$('sidebar-links').append(link);
     if(DATAHUB_ORIGINS.includes(new URL(d.url).origin)){
       link.dataset.localDatahubLink='';link.hidden=dataHubActive;
-      $('datahub-summary').textContent=link.textContent;
+      dataHubNavigation.querySelector('summary').textContent=link.textContent;
       $('sidebar-links').append(dataHubNavigation);
     }
     if(isSpotify(new URL(d.url))){
