@@ -60,3 +60,7 @@
 .datahub-navigation button:disabled { opacity:.55; cursor:wait; }
 .datahub-navigation button:focus-visible, .datahub-navigation summary:focus-visible { outline:3px solid #ffbb33; outline-offset:-3px; }
 #datahub-status { display:block; padding:10px; font-size:.75em; text-align:right; overflow-wrap:anywhere; }
+
+/* Expand media controls only for the open media screen or active playback. */
+.spotify-sidebar{display:none}
+body.media-view .spotify-sidebar,body.music-playing .spotify-sidebar{display:block}

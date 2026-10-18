@@ -49,6 +49,13 @@ if (!destinations.some(d => {
   const url = safeURL(d.url);
   return url && ['http://localhost:8501','http://127.0.0.1:8501'].includes(url.origin);
 })) destinations.push({name:'LOCAL DATAHUB',url:'http://localhost:8501/',mode:'screen'});
+// Apply the requested initial order once; later link-editor choices still persist.
+if (read('voyager.local-datahub-first',false)!==true) {
+  const index=destinations.findIndex(d=>['http://localhost:8501','http://127.0.0.1:8501'].includes(new URL(d.url).origin));
+  destinations.unshift(destinations.splice(index,1)[0]);
+  if (write('voyager.shared-links',destinations)) write('voyager.local-datahub-first',true);
+}
+
 
 // DataHub keeps one app session while the host sidebar changes its active page.
 const DATAHUB_ORIGINS = ['http://localhost:8501','http://127.0.0.1:8501'];
@@ -58,6 +65,7 @@ let dataHubActive = false;
 function resetDataHub() {
   dataHubActive = false;
   dataHubOrigin = null;
+  $('screen-frame').style.removeProperty('height');
   $('datahub-navigation').hidden = true;
   document.querySelectorAll('[datahub-page]').forEach(button => {
     button.disabled = true;
@@ -89,8 +97,14 @@ document.querySelectorAll('[datahub-page]').forEach(button => button.addEventLis
 }));
 window.addEventListener('message', event => {
   if (!dataHubActive || event.origin !== dataHubOrigin ||
-      event.source !== $('screen-frame').contentWindow ||
-      event.data?.type !== 'fpl-datahub-state' || !DATAHUB_PAGES.includes(event.data.selected)) return;
+      event.source !== $('screen-frame').contentWindow) return;
+  if (event.data?.type === 'fpl-datahub-size') {
+    const height = event.data.height;
+    if (Number.isFinite(height) && height > 0 && height <= 50000)
+      $('screen-frame').style.height = `${Math.max(320,Math.ceil(height))}px`;
+    return;
+  }
+  if (event.data?.type !== 'fpl-datahub-state' || !DATAHUB_PAGES.includes(event.data.selected)) return;
   $('datahub-status').textContent = event.data.selected.toUpperCase();
   document.querySelectorAll('[datahub-page]').forEach(button => {
     button.disabled = false;
@@ -108,12 +122,19 @@ function setScreenSource(source){
   else frame.setAttribute('sandbox','allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-downloads');
   frame.src=source;
 }
+function syncMediaSidebar(){
+  const expanded=document.body.classList.contains('media-view')||document.body.classList.contains('music-playing');
+  document.querySelectorAll('[data-spotify-navigation]').forEach(link=>link.setAttribute('aria-expanded',String(expanded)));
+}
+new MutationObserver(syncMediaSidebar).observe(document.body,{attributes:true,attributeFilter:['class']});
 function backgroundSpotify(){
+  document.body.classList.remove('media-view');
   const panel=$('spotify-panel');if(panel.hidden)return;
   panel.classList.add('is-background');$('spotify-panel-body').inert=true;
 }
 function openSpotify(){
   resetDataHub();
+  document.body.classList.add('media-view');
   const panel=$('spotify-panel');panel.hidden=false;panel.classList.remove('is-background');
   $('spotify-panel-body').inert=false;
   $('command-station').hidden=true;$('embedded-screen').hidden=false;
@@ -181,7 +202,8 @@ function render(){
     const link=document.createElement('a');link.className=['peach','blue','silver','earth'][i%4];
     prepareLink(link,d);link.textContent=`${String(i+1).padStart(2,'0')} / ${d.name}`;$('sidebar-links').append(link);
     if(isSpotify(new URL(d.url))){
-      const mini=document.createElement('section');mini.className='spotify-sidebar';mini.setAttribute('aria-label',`${d.name} playback`);
+      const mini=document.createElement('section');mini.className='spotify-sidebar';mini.id=`spotify-sidebar-${i}`;
+      link.dataset.spotifyNavigation='';link.setAttribute('aria-controls',mini.id);mini.setAttribute('aria-label',`${d.name} playback`);
       const track=document.createElement('span');track.dataset.spotifyTrack='';track.textContent='NOT PLAYING';
       const remaining=document.createElement('span');remaining.dataset.spotifyRemaining='';remaining.textContent='Connect Spotify for controls';
       const controls=document.createElement('div');controls.className='spotify-sidebar-buttons';
@@ -203,6 +225,7 @@ function render(){
     const host=document.createElement('span');host.className='host';host.textContent=new URL(d.url).hostname.replace(/^www\./,'').toUpperCase();
     target.append(name,host);a.append(number,target);$('destinations').append(a);
   });
+  syncMediaSidebar();
   document.dispatchEvent(new Event('spotify-links-rendered'));
 }
 function soundLabel(){$('sound').textContent=`PAGE CHIRPS: ${sound?'ON':'OFF'}`;$('sound').setAttribute('aria-pressed',String(sound));}
