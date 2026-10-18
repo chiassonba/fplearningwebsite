@@ -56,7 +56,7 @@
 .datahub-navigation button:nth-child(4n+2) { background:#ffe1ca; }
 .datahub-navigation button:nth-child(4n+3) { background:#55a7ff; }
 .datahub-navigation button:nth-child(4n+4) { background:#cc9966; }
-.datahub-navigation button[aria-current="page"] { box-shadow:inset -7px 0 #ffbb33; }
+.datahub-navigation button[aria-current="page"] { box-shadow:none; }
 .datahub-navigation button:disabled { opacity:.55; cursor:wait; }
 .datahub-navigation button:focus-visible, .datahub-navigation summary:focus-visible { outline:3px solid #ffbb33; outline-offset:-3px; }
 #datahub-status { display:block; padding:10px; font-size:.75em; text-align:right; overflow-wrap:anywhere; }
