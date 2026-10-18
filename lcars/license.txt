@@ -1,0 +1,7 @@
+Voyager LCARS for Opera GX, personal fan project.
+Original package code and procedural wallpaper: MIT License, Copyright 2026.
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies, subject to preserving this notice. THE SOFTWARE IS PROVIDED AS IS, WITHOUT WARRANTY OF ANY KIND.
+Voyager colour reference: https://www.thelcars.com/themes/voyager.html by Jim Robertus.
+Audio files assets/audio/beep1.mp3 through assets/audio/beep4.mp3 are unchanged downloads from https://www.thelcars.com/themes/assets/ used by the referenced Voyager page. They are third-party reference assets, excluded from the MIT licence above. No claim is made that these are authenticated television production masters. Third-party rights remain with their respective owners.
+LCARS was designed by Michael Okuda. Star Trek and related marks belong to their respective owners. This is an unofficial fan project with no affiliation or endorsement.
+Antonio font is packaged only in the companion start page and is licensed under the SIL Open Font License, supplied with the font.
