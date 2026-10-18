@@ -4,6 +4,12 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
+## [0.1.46] - 2026-10-17
+
+### Changed
+
+- Replace the link editor display dropdown with an Embed in LCARS screen checkbox. Checked links embed; unchecked links open a new tab. Existing choices remain unchanged.
+
 ## [0.1.45] - 2026-10-17
 
 ### Added

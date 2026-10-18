@@ -187,10 +187,9 @@ function renderEditor(){
       const l=document.createElement('label');l.textContent=label;
       const input=document.createElement('input');input.name=`${key}-${i}`;input.value=d[key];input.required=true;input.maxLength=key==='name'?35:2048;input.type=key==='url'?'url':'text';l.append(input);row.append(l);
     }
-    const displayLabel=document.createElement('label');displayLabel.textContent='OPEN IN';
-    const display=document.createElement('select');display.name=`mode-${i}`;
-    for(const [value,label]of [['tab','New tab'],['screen','LCARS screen']]){const option=document.createElement('option');option.value=value;option.textContent=label;display.append(option);}
-    display.value=destinationMode(d);displayLabel.append(display);row.append(displayLabel);
+    const displayLabel=document.createElement('label');displayLabel.className='embed-choice';
+    const display=document.createElement('input');display.type='checkbox';display.name=`mode-${i}`;display.value='screen';display.checked=destinationMode(d)==='screen';
+    displayLabel.append(display,document.createTextNode('EMBED IN LCARS SCREEN'));row.append(displayLabel);
     const actions=document.createElement('div');actions.className='edit-actions';
     for(const [action,label]of [['up','Up'],['down','Down'],['remove','Remove']]){
       const button=document.createElement('button');button.type='button';button.textContent=label;
