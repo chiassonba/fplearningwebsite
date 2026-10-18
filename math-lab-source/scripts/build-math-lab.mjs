@@ -35,8 +35,12 @@ async function inspect(dir) {
       await inspect(path);
       continue;
     }
-    const bytes = await readFile(path),
-      relative = path.slice(root.length + 1).replaceAll('\\', '/');
+    let bytes = await readFile(path);
+    const relative = path.slice(root.length + 1).replaceAll('\\', '/');
+    if (/\.(?:js|html|css|json|txt)$/.test(relative)) {
+      bytes = Buffer.from(bytes.toString('utf8').replaceAll('\r\n', '\n'));
+      await writeFile(path, bytes);
+    }
     if (
       relative.endsWith('.map') ||
       /(?:private\.json|\.env|\.sql|\.sqlite)/.test(relative)

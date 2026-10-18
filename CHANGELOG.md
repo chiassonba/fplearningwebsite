@@ -4,6 +4,13 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
+## [0.1.49] - 2026-10-18
+
+### Fixed
+
+- Keep polynomial first-principles expansion and cancellation equalities on a single line. Remove forced rows on the right side; narrow screens retain the existing equation scrolling.
+- Verified all 108 mathematics tests and the production build.
+
 ## [0.1.48] - 2026-10-18
 
 ### Added

@@ -1,6 +1,6 @@
 {
   "application": "FPLab Math Lab",
-  "version": "0.2.0-alpha.9",
+  "version": "0.2.0-alpha.10",
   "url": "https://fplearning.ca/math-lab/",
   "mode": "public-static",
   "files": [
@@ -10,14 +10,14 @@
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
     },
     {
-      "path": "assets/index-B8hWsFyQ.js",
-      "bytes": 615774,
-      "sha256": "c8ad4cd495eec838458b856541d2be037750dc9cafaf321b070c2529352d3586"
-    },
-    {
       "path": "assets/index-copkdeU-.css",
       "bytes": 41617,
       "sha256": "28f3563e847255f690ac7c34671190f1a81c071e6862d0e56b960b776b53e0e2"
+    },
+    {
+      "path": "assets/index-Dcr-cpk4.js",
+      "bytes": 615712,
+      "sha256": "c71147530ae3623be7ccc1882a3841514e3c485b07cbb7971971f9253288d8f4"
     },
     {
       "path": "assets/KaTeX_AMS-Regular-BQhdFMY1.woff2",
@@ -336,8 +336,8 @@
     },
     {
       "path": "index.html",
-      "bytes": 1259,
-      "sha256": "724f29d5534fdf866e06c4605e4cfbcb68c71d036daab44d23a21fa74d871497"
+      "bytes": 1260,
+      "sha256": "6c2e903e159ce0bdc069463d700340ef048a146a7cdb148e2c1923172af2daa0"
     },
     {
       "path": "licenses/katex.txt",
