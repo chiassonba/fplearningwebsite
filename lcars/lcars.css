@@ -34,3 +34,5 @@
 
 .signal-wave path{stroke-width:.75}.signal-wave path:nth-child(2){stroke:var(--frost);stroke-width:.55;opacity:.65}.signal-wave path:nth-child(3){stroke-width:.45;opacity:.45}.music-playing .signal-wave path{animation:signal-static .23s steps(1,end) infinite;transform-origin:50% 50%;transform-box:view-box}.music-playing .signal-wave path:nth-child(2){animation-duration:.31s;animation-delay:-.11s}.music-playing .signal-wave path:nth-child(3){animation-duration:.19s;animation-delay:-.07s}@keyframes signal-static{0%,100%{transform:translateX(-.6px) scaleY(.7)}20%{transform:translateX(.5px) scaleY(1.1)}40%{transform:translateX(-.3px) scaleY(.65)}60%{transform:translateX(.7px) scaleY(.9)}80%{transform:translateX(0) scaleY(.55)}}@media(prefers-reduced-motion:reduce){.music-playing .signal-wave path{animation:none}}
 .spotify-playlist-items li[data-playlist-index]{cursor:pointer;user-select:none}.spotify-playlist-items li[data-playlist-index]:hover{background:#151e2c}
+
+.edit-row label.embed-choice{flex-direction:row;align-items:center;gap:8px}.edit-row .embed-choice input{width:20px;height:20px;flex-shrink:0;padding:0;margin:0;accent-color:var(--gold)}
