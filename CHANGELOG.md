@@ -4,6 +4,12 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
+## [0.1.47] - 2026-10-17
+
+### Added
+
+- Three CSS-only planets orbit the network-access rings. Periods follow Kepler's circular-orbit ratio T proportional to r^(3/2): 4s, 12.984s and 21.589s from inner to outer. Reduced-motion mode keeps them stationary.
+
 ## [0.1.46] - 2026-10-17
 
 ### Changed

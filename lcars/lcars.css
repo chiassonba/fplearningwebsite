@@ -36,3 +36,12 @@
 .spotify-playlist-items li[data-playlist-index]{cursor:pointer;user-select:none}.spotify-playlist-items li[data-playlist-index]:hover{background:#151e2c}
 
 .edit-row label.embed-choice{flex-direction:row;align-items:center;gap:8px}.edit-row .embed-choice input{width:20px;height:20px;flex-shrink:0;padding:0;margin:0;accent-color:var(--gold)}
+
+/* Circular Kepler orbits: T = 4s * (r / 13px)^(3/2), measured at each ring's stroke centre. */
+.rings .network-orbit{position:absolute;left:50%;top:50%;width:0;height:0;transform-origin:0 0;transform:rotate(var(--phase));animation:network-orbit var(--period) linear infinite;pointer-events:none}
+.network-orbit.inner{--radius:13px;--period:4s;--phase:-45deg;--planet:var(--peach)}
+.network-orbit.middle{--radius:28.5px;--period:12.984s;--phase:80deg;--planet:var(--science)}
+.network-orbit.outer{--radius:40px;--period:21.589s;--phase:210deg;--planet:var(--silver)}
+.network-orbit::before{content:'';position:absolute;left:var(--radius);top:0;width:6px;height:6px;border-radius:50%;background:var(--planet);transform:translate(-50%,-50%)}
+@keyframes network-orbit{from{transform:rotate(var(--phase))}to{transform:rotate(calc(var(--phase) + 1turn))}}
+@media(prefers-reduced-motion:reduce){.rings .network-orbit{animation:none}}
