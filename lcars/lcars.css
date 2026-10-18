@@ -50,7 +50,7 @@
 .datahub-navigation[hidden] { display:none; }
 .datahub-navigation { border-bottom:8px solid #000; background:#828cad; color:#000; }
 .datahub-navigation summary { cursor:pointer; min-height:58px; padding:18px 12px; text-align:right; background:var(--peach); color:#000; }
-.datahub-navigation nav { display:flex; flex-direction:column; gap:6px; background:#000; }
+.datahub-navigation nav { display:flex; flex-direction:column; gap:6px; padding-top:6px; background:#000; }
 .datahub-navigation button { border:0; border-radius:0; min-height:44px; padding:10px 12px;
   text-align:right; background:#828cad; color:#000; font:inherit; cursor:pointer; }
 .datahub-navigation button:nth-child(4n+2) { background:#ffe1ca; }

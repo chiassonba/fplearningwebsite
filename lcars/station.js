@@ -1,5 +1,20 @@
 'use strict';
 const $ = id => document.getElementById(id);
+const LINK_PALETTE = Object.freeze({
+  peach:{label:'Peach',value:'var(--peach)'},
+  blue:{label:'Blue',value:'var(--blue)'},
+  silver:{label:'Silver',value:'var(--silver)'},
+  earth:{label:'Earth',value:'var(--earth)'},
+  gold:{label:'Gold',value:'var(--gold)'},
+  frost:{label:'Frost',value:'var(--frost)'},
+  pewter:{label:'Pewter',value:'var(--pewter)'},
+  sky:{label:'Sky',value:'var(--sky)'},
+  science:{label:'Science blue',value:'var(--science)'}
+});
+const DEFAULT_LINK_COLOURS = ['peach','blue','silver','earth'];
+function linkColour(link,index){
+  return Object.prototype.hasOwnProperty.call(LINK_PALETTE,link.color)?link.color:DEFAULT_LINK_COLOURS[index%DEFAULT_LINK_COLOURS.length];
+}
 const defaults = [
   {name:'COMMUNICATIONS',url:'https://mail.google.com/'},
   {name:'DATA ARCHIVES',url:'https://drive.google.com/'},
@@ -56,6 +71,12 @@ if (read('voyager.local-datahub-first',false)!==true) {
 if(read('voyager.chronometer-removed',false)!==true){
   destinations=destinations.filter(d=>!(d.name.trim().toUpperCase()==='CHRONOMETER'&&new URL(d.url).hostname==='calendar.google.com'));
   if(write('voyager.shared-links',destinations))write('voyager.chronometer-removed',true);
+}
+
+// Assign legacy links a palette entry once, so their colour follows manual moves.
+if(destinations.some(d=>!Object.prototype.hasOwnProperty.call(LINK_PALETTE,d.color))){
+  destinations=destinations.map((d,i)=>({...d,color:linkColour(d,i)}));
+  write('voyager.shared-links',destinations);
 }
 
 // DataHub keeps one app session while the host sidebar changes its active page.
@@ -204,11 +225,12 @@ function render(){
   $('destinations').replaceChildren();
   $('sidebar-links').replaceChildren();
   destinations.forEach((d,i)=>{
-    const link=document.createElement('a');link.className=['peach','blue','silver','earth'][i%4];
+    const link=document.createElement('a');link.className=linkColour(d,i);link.style.backgroundColor=LINK_PALETTE[linkColour(d,i)].value;
     prepareLink(link,d);link.textContent=`${String(i+1).padStart(2,'0')} / ${d.name}`;$('sidebar-links').append(link);
     if(DATAHUB_ORIGINS.includes(new URL(d.url).origin)){
       link.dataset.localDatahubLink='';link.hidden=dataHubActive;
       dataHubNavigation.querySelector('summary').textContent=link.textContent;
+      dataHubNavigation.querySelector('summary').style.backgroundColor=LINK_PALETTE[linkColour(d,i)].value;
       $('sidebar-links').append(dataHubNavigation);
     }
     if(isSpotify(new URL(d.url))){
@@ -229,7 +251,7 @@ function render(){
   if(!dataHubNavigation.isConnected){dataHubNavigation.hidden=true;$('sidebar-links').append(dataHubNavigation);}
   destinations.forEach((d,i)=>{
     const a=document.createElement('a');a.className='destination';prepareLink(a,d);
-    a.style.setProperty('--tile',['#ffe1ca','#55a7ff','#828cad','#cc9966','#99ccff','#ffbb33'][i%6]);
+    a.style.setProperty('--tile',LINK_PALETTE[linkColour(d,i)].value);
     const number=document.createElement('span');number.className='index';number.textContent=String(i+1).padStart(2,'0');
     const target=document.createElement('span');target.className='target';
     const name=document.createElement('span');name.className='name';name.textContent=d.name;
@@ -268,7 +290,7 @@ $('command-form').addEventListener('submit',e=>{
 let editDrafts;
 function captureDraft(){
   const data=new FormData($('edit-form'));
-  editDrafts=editDrafts.map((d,i)=>({name:String(data.get(`name-${i}`)??''),url:String(data.get(`url-${i}`)??''),mode:data.get(`mode-${i}`)==='screen'?'screen':'tab'}));
+  editDrafts=editDrafts.map((d,i)=>({name:String(data.get(`name-${i}`)??''),url:String(data.get(`url-${i}`)??''),mode:data.get(`mode-${i}`)==='screen'?'screen':'tab',color:linkColour({color:data.get(`color-${i}`)},i)}));
 }
 function renderEditor(){
   $('edit-rows').replaceChildren();$('edit-error').textContent='';
@@ -279,6 +301,16 @@ function renderEditor(){
       const l=document.createElement('label');l.textContent=label;
       const input=document.createElement('input');input.name=`${key}-${i}`;input.value=d[key];input.required=true;input.maxLength=key==='name'?35:2048;input.type=key==='url'?'url':'text';l.append(input);row.append(l);if(key==='url')addressInput=input;
     }
+    const colourLabel=document.createElement('label');colourLabel.textContent='LCARS COLOUR';
+    const colour=document.createElement('select');colour.name=`color-${i}`;
+    Object.entries(LINK_PALETTE).forEach(([value,entry])=>{
+      const option=document.createElement('option');option.value=value;option.textContent=entry.label;
+      option.style.backgroundColor=entry.value;option.style.color='#000';colour.append(option);
+    });
+    colour.value=linkColour(d,i);
+    const previewColour=()=>{colour.style.backgroundColor=LINK_PALETTE[colour.value].value;colour.style.color='#000';};
+    colour.addEventListener('change',previewColour);previewColour();
+    colourLabel.append(colour);row.append(colourLabel);
     const displayLabel=document.createElement('label');displayLabel.className='embed-choice';
     const display=document.createElement('input');display.type='checkbox';display.name=`mode-${i}`;display.value='screen';display.checked=destinationMode(d)==='screen';
     displayLabel.append(display,document.createTextNode('EMBED IN LCARS SCREEN'));row.append(displayLabel);
@@ -306,7 +338,7 @@ $('edit').addEventListener('click',()=>{
   editDrafts=destinations.map(d=>({...d}));renderEditor();$('editor').showModal();
 });
 $('add-link').addEventListener('click',()=>{
-  captureDraft();editDrafts.push({name:'',url:'https://',mode:'tab'});renderEditor();
+  captureDraft();editDrafts.push({name:'',url:'https://',mode:'tab',color:linkColour({},editDrafts.length)});renderEditor();
   $('edit-rows').lastElementChild.querySelector('input').focus();
 });
 $('edit-rows').addEventListener('click',e=>{
