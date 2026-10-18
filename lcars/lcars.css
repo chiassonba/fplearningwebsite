@@ -66,3 +66,8 @@
 body.media-view .spotify-sidebar,body.music-playing .spotify-sidebar{display:block}
 
 .link-tools-hint{grid-column:1/-1;color:var(--gold);font-size:12px;letter-spacing:.04em}
+
+/* Match the expandable DataHub link to the regular sidebar link typography. */
+.datahub-navigation > summary { font-family:inherit; font-size:16px; font-weight:400; }
+@media(max-width:1100px) { .datahub-navigation > summary { font-size:14px; } }
+@media(max-width:760px) { .datahub-navigation > summary { font-size:12px; } }
