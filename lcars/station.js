@@ -290,6 +290,14 @@ function chirp(kind='letter'){
     void activeSample.play().catch(()=>{});
   }catch{/* Sound is optional if this browser restricts audio. */}
 }
+// One delegated listener also covers links rebuilt by System Configuration.
+const navigationChirps=['letter','space','enter','backspace'];
+let navigationChirpIndex=0;
+document.addEventListener('click',event=>{
+  const control=event.target.closest?.('#sidebar-links > a, .destination, #datahub-navigation > summary, [datahub-page], #screen-home, #navigation-home');
+  if(!control||control.disabled||!sound)return;
+  chirp(navigationChirps[navigationChirpIndex++ % navigationChirps.length]);
+},true);
 function render(){
   const dataHubNavigation=$('datahub-navigation');
   dataHubNavigation.remove();
