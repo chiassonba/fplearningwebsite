@@ -112,14 +112,11 @@ export function algebraSteps(s: ExplorerState, x: number): AlgebraStep[] {
       const poly = polynomialLatex(group);
       groups.push(`${termPower('h', j)}\\left(${poly}\\right)`);
     }
-    const aligned = (lhs: string, terms: string[]) =>
-      r`\begin{aligned}${lhs}&=${terms[0] ?? '0'}${terms
-        .slice(1)
-        .map((t) => r`\\&\quad+${t}`)
-        .join('')}\end{aligned}`;
+    const equality = (lhs: string, terms: string[]) =>
+      `${lhs}=${terms.length ? terms.join('+') : '0'}`;
     add(
       'Expand, subtract f(x), and cancel equal terms',
-      [aligned('f(x+h)-f(x)', groups)],
+      [equality('f(x+h)-f(x)', groups)],
       'Group the remaining terms by powers of h. Every term has a factor of h.',
     );
     const divided: string[] = [];
@@ -130,7 +127,7 @@ export function algebraSteps(s: ExplorerState, x: number): AlgebraStep[] {
         `${termPower('h', j - 1)}\\left(${polynomialLatex(group)}\\right)`,
       );
     }
-    add('Cancel the common factor h', [aligned(quotient, divided), r`h\ne 0`]);
+    add('Cancel the common factor h', [equality(quotient, divided), r`h\ne 0`]);
     const derivative = polynomialLatex(p.slice(1).map((c, i) => c * (i + 1)));
     add(
       'Take the limit as h approaches zero',
