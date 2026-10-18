@@ -2,7 +2,6 @@
 const $ = id => document.getElementById(id);
 const defaults = [
   {name:'COMMUNICATIONS',url:'https://mail.google.com/'},
-  {name:'CHRONOMETER',url:'https://calendar.google.com/'},
   {name:'DATA ARCHIVES',url:'https://drive.google.com/'},
   {name:'ASTROMETRICS',url:'https://www.google.com/maps'},
   {name:'SUBSPACE MEDIA',url:'https://spotify.com/'},
@@ -11,6 +10,7 @@ const defaults = [
 function read(key,fallback){try{return JSON.parse(localStorage.getItem(key))??fallback;}catch{return fallback;}}
 function write(key,value){try{localStorage.setItem(key,JSON.stringify(value));return true;}catch{$('storage-status').textContent='STORAGE UNAVAILABLE';return false;}}
 function safeURL(value){try{const u=new URL(value);return ['https:','http:'].includes(u.protocol)?u:null;}catch{return null;}}
+function isLocalDataHub(url){return !!url&&['http://localhost:8501','http://127.0.0.1:8501'].includes(url.origin);}
 function isSpotify(url){return ['spotify.com','www.spotify.com','open.spotify.com'].includes(url.hostname);}
 function spotifyContent(value){
   const url=safeURL(value);if(!url||url.hostname!=='open.spotify.com')return null;
@@ -22,7 +22,7 @@ function spotifyContent(value){
 function destinationMode(d){
   if(['screen','tab'].includes(d.mode))return d.mode;
   const url=safeURL(d.url);
-  return url&&(isSpotify(url)||url.origin===location.origin||['fplearning.ca','www.fplearning.ca'].includes(url.hostname))?'screen':'tab';
+  return url&&(isLocalDataHub(url)||isSpotify(url)||url.origin===location.origin||['fplearning.ca','www.fplearning.ca'].includes(url.hostname))?'screen':'tab';
 }
 function validLinks(value){return Array.isArray(value)&&value.every(d=>d&&typeof d.name==='string'&&d.name.trim()&&safeURL(d.url));}
 const savedShared=read('voyager.shared-links',null);
@@ -45,17 +45,18 @@ else{
   write('voyager.shared-links',destinations);
 }
 destinations=destinations.map(d=>({...d,mode:destinationMode(d)}));
-if (!destinations.some(d => {
-  const url = safeURL(d.url);
-  return url && ['http://localhost:8501','http://127.0.0.1:8501'].includes(url.origin);
-})) destinations.push({name:'LOCAL DATAHUB',url:'http://localhost:8501/',mode:'screen'});
-// Apply the requested initial order once; later link-editor choices still persist.
+// Install the local link once. Later editor removals, labels and order are authoritative.
 if (read('voyager.local-datahub-first',false)!==true) {
-  const index=destinations.findIndex(d=>['http://localhost:8501','http://127.0.0.1:8501'].includes(new URL(d.url).origin));
+  let index=destinations.findIndex(d=>isLocalDataHub(safeURL(d.url)));
+  if(index<0){destinations.push({name:'LOCAL DATAHUB',url:'http://localhost:8501/',mode:'screen'});index=destinations.length-1;}
   destinations.unshift(destinations.splice(index,1)[0]);
-  if (write('voyager.shared-links',destinations)) write('voyager.local-datahub-first',true);
+  if(write('voyager.shared-links',destinations))write('voyager.local-datahub-first',true);
 }
-
+// Remove only the old default once, allowing it to be recreated manually later.
+if(read('voyager.chronometer-removed',false)!==true){
+  destinations=destinations.filter(d=>!(d.name.trim().toUpperCase()==='CHRONOMETER'&&new URL(d.url).hostname==='calendar.google.com'));
+  if(write('voyager.shared-links',destinations))write('voyager.chronometer-removed',true);
+}
 
 // DataHub keeps one app session while the host sidebar changes its active page.
 const DATAHUB_ORIGINS = ['http://localhost:8501','http://127.0.0.1:8501'];
@@ -273,13 +274,23 @@ function renderEditor(){
   $('edit-rows').replaceChildren();$('edit-error').textContent='';
   editDrafts.forEach((d,i)=>{
     const row=document.createElement('div');row.className='edit-row';
+    let addressInput;
     for(const [key,label]of [['name',`${i+1} / LABEL`],['url','WEBSITE ADDRESS']]){
       const l=document.createElement('label');l.textContent=label;
-      const input=document.createElement('input');input.name=`${key}-${i}`;input.value=d[key];input.required=true;input.maxLength=key==='name'?35:2048;input.type=key==='url'?'url':'text';l.append(input);row.append(l);
+      const input=document.createElement('input');input.name=`${key}-${i}`;input.value=d[key];input.required=true;input.maxLength=key==='name'?35:2048;input.type=key==='url'?'url':'text';l.append(input);row.append(l);if(key==='url')addressInput=input;
     }
     const displayLabel=document.createElement('label');displayLabel.className='embed-choice';
     const display=document.createElement('input');display.type='checkbox';display.name=`mode-${i}`;display.value='screen';display.checked=destinationMode(d)==='screen';
     displayLabel.append(display,document.createTextNode('EMBED IN LCARS SCREEN'));row.append(displayLabel);
+    const tools=document.createElement('small');tools.className='link-tools-hint';
+    function describeTools(){
+      const url=safeURL(addressInput.value);
+      const name=isLocalDataHub(url)?'DATAHUB TABS':url&&isSpotify(url)?'SPOTIFY CONTROLS':'';
+      tools.textContent=name?(display.checked?`${name} ATTACHED TO THIS LINK`:`ENABLE EMBEDDING TO OPEN ${name} HERE`):'';
+      tools.hidden=!name;
+    }
+    addressInput.addEventListener('input',describeTools);display.addEventListener('change',describeTools);
+    row.append(tools);describeTools();
     const actions=document.createElement('div');actions.className='edit-actions';
     for(const [action,label]of [['up','Up'],['down','Down'],['remove','Remove']]){
       const button=document.createElement('button');button.type='button';button.textContent=label;

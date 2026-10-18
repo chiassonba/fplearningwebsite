@@ -7,8 +7,8 @@
   <meta name="robots" content="noindex, nofollow, noarchive">
   <link rel="icon" type="image/png" sizes="32x32" href="images/fpl-stamp-favicon-32.png?v=20261008">
   <link rel="icon" type="image/png" sizes="64x64" href="images/fpl-stamp-favicon-64.png?v=20261008">
-  <link rel="stylesheet" href="lcars/lcars.css?v=0.1.50-symbols-border">
-  <script src="lcars/station.js?v=0.1.50-datahub-group" defer></script>
+  <link rel="stylesheet" href="lcars/lcars.css?v=0.1.51-editable-tools">
+  <script src="lcars/station.js?v=0.1.51-editable-tools" defer></script>
   <script src="lcars/spotify.js?v=0.1.47" defer></script>
 </head>
 <body>
@@ -149,6 +149,7 @@
     <form id="edit-form">
       <div class="section-label"><h2>LINK CONTROL</h2><button type="button" id="close" class="close" aria-label="Close link editor">&#10005;</button></div>
       <p>These links appear in the same order on the sidebar and the screen. Add or remove links and move them up or down. Tick Embed in LCARS screen to open a link inside the screen; leave it unticked to open a new tab. Use full https:// or http:// addresses. The LCARS screen works only with pages that allow embedding.</p>
+      <p>Local DataHub links (http://localhost:8501) include the expandable page tabs. Spotify links include playback controls. These tools follow the link when you rename or move it. Enable Embed in LCARS screen to open them here.</p>
       <div id="edit-rows"></div>
       <button type="button" id="add-link" class="pill silver">ADD LINK</button>
       <p id="edit-error" role="alert"></p>

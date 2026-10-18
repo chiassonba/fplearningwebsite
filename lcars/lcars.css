@@ -64,3 +64,5 @@
 /* Expand media controls only for the open media screen or active playback. */
 .spotify-sidebar{display:none}
 body.media-view .spotify-sidebar,body.music-playing .spotify-sidebar{display:block}
+
+.link-tools-hint{grid-column:1/-1;color:var(--gold);font-size:12px;letter-spacing:.04em}
