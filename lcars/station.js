@@ -301,6 +301,7 @@ function render(){
     if(DATAHUB_ORIGINS.includes(new URL(d.url).origin)){
       link.dataset.localDatahubLink='';link.hidden=dataHubActive;
       dataHubNavigation.querySelector('summary').textContent=link.textContent;
+      dataHubNavigation.querySelector('summary').dataset.paletteColour=linkColour(d,i);
       dataHubNavigation.querySelector('summary').style.backgroundColor=LINK_PALETTE[linkColour(d,i)].value;
       $('sidebar-links').append(dataHubNavigation);
     }
@@ -322,6 +323,7 @@ function render(){
   if(!dataHubNavigation.isConnected){dataHubNavigation.hidden=true;$('sidebar-links').append(dataHubNavigation);}
   destinations.forEach((d,i)=>{
     const a=document.createElement('a');a.className='destination';prepareLink(a,d);
+    a.dataset.paletteColour=linkColour(d,i);
     a.style.setProperty('--tile',LINK_PALETTE[linkColour(d,i)].value);
     const number=document.createElement('span');number.className='index';number.textContent=String(i+1).padStart(2,'0');
     const target=document.createElement('span');target.className='target';
