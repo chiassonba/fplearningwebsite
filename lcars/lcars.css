@@ -124,3 +124,10 @@ body.media-view .screen-hint { order:4; }
  .embedded-screen .screen-toolbar .pill { font-size:12px; padding:12px; }
  .embedded-screen #archives-root-control { flex-basis:100%; justify-content:flex-end; }
 }
+
+/* Reference palettes share the existing LCARS geometry. */
+:root[data-lcars-theme="lower-decks-padd"] {--silver:#5588ee;--pewter:#344470;--blue:#7799dd;--science:#66ccff;--gold:#88eeff;--peach:#99ccff;--earth:#455580;--sky:#7799dd;--frost:#f3f3fc;}
+:root[data-lcars-theme="lower-decks"] {--silver:#ff4400;--pewter:#cc5500;--blue:#ffaa44;--science:#ff7700;--gold:#ffcc99;--peach:#ffcc99;--earth:#ff9911;--sky:#ff9911;--frost:#ffeecc;}
+:root[data-lcars-theme="nemesis-blue"] {--silver:#2266ff;--pewter:#52526a;--blue:#6699ff;--science:#0048f0;--gold:#ff8833;--peach:#ebf0ff;--earth:#d1a16c;--sky:#88bbff;--frost:#ebf0ff;}
+:root[data-lcars-theme="fplcars"] {--silver:#6d748c;--pewter:#52596e;--blue:#9ea5ba;--science:#ffffff;--gold:#eab308;--peach:#d2d5df;--earth:#9ea5ba;--sky:#ffffff;--frost:#ffffff;}
+:root[data-lcars-theme="fplcars"] body { background:#0a0f1a; }

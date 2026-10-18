@@ -25,11 +25,14 @@ const defaults = [
 function read(key,fallback){try{return JSON.parse(localStorage.getItem(key))??fallback;}catch{return fallback;}}
 function write(key,value){try{localStorage.setItem(key,JSON.stringify(value));return true;}catch{$('storage-status').textContent='STORAGE UNAVAILABLE';return false;}}
 // This preference belongs only to the homepage, not the embedded DataHub.
-function homepageTheme(){return read('lcars.homepage-theme','voyager')==='picard'?'picard':'voyager';}
+const HOMEPAGE_THEMES = Object.freeze({"voyager": "LCARS Voyager", "picard": "LCARS Picard", "lower-decks-padd": "LCARS Lower Decks PADD", "lower-decks": "LCARS Lower Decks", "nemesis-blue": "LCARS Nemesis Blue", "fplcars": "FPLCARS"});
+function homepageTheme(){const theme=read('lcars.homepage-theme','voyager');return Object.hasOwn(HOMEPAGE_THEMES,theme)?theme:'voyager';}
 function applyHomepageTheme(){
   const theme=homepageTheme();document.documentElement.dataset.lcarsTheme=theme;
   $('homepage-theme').value=theme;
-  $('palette-reference').href=`https://www.thelcars.com/themes/${theme}.html`;
+  document.title=HOMEPAGE_THEMES[theme];
+  $('palette-reference').href=theme==='fplcars'?'https://fplearning.ca/':`https://www.thelcars.com/themes/${theme}.html`;
+  $('palette-reference').textContent=theme==='fplcars'?'FPLCARS / FIRST PRINCIPLES LEARNING':'PALETTE REFERENCE: THELCARS.COM';
 }
 function safeURL(value){try{const u=new URL(value);return ['https:','http:'].includes(u.protocol)?u:null;}catch{return null;}}
 function isLocalArchives(url){return !!url&&['http://localhost:8502','http://127.0.0.1:8502'].includes(url.origin);}
