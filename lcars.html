@@ -7,8 +7,8 @@
   <meta name="robots" content="noindex, nofollow, noarchive">
   <link rel="icon" type="image/png" sizes="32x32" href="images/fpl-stamp-favicon-32.png?v=20261008">
   <link rel="icon" type="image/png" sizes="64x64" href="images/fpl-stamp-favicon-64.png?v=20261008">
-  <link rel="stylesheet" href="lcars/lcars.css?v=0.1.47">
-  <script src="lcars/station.js?v=0.1.47" defer></script>
+  <link rel="stylesheet" href="lcars/lcars.css?v=0.1.48-datahub">
+  <script src="lcars/station.js?v=0.1.48-datahub" defer></script>
   <script src="lcars/spotify.js?v=0.1.47" defer></script>
 </head>
 <body>
@@ -30,6 +30,20 @@
     <aside class="rail">
       <a class="rail-cap" id="navigation-home" href="#command">COMMAND STATION</a>
       <div id="sidebar-links" class="sidebar-links"></div>
+      <details id="datahub-navigation" class="datahub-navigation" hidden open>
+        <summary>DATAHUB</summary>
+        <nav aria-label="DataHub pages">
+          <button type="button" datahub-page="Schedule" disabled>SCHEDULE</button>
+          <button type="button" datahub-page="Workspace" disabled>WORKSPACE</button>
+          <button type="button" datahub-page="Add Session" disabled>ADD SESSION</button>
+          <button type="button" datahub-page="Students" disabled>STUDENTS</button>
+          <button type="button" datahub-page="Invoicing" disabled>INVOICING</button>
+          <button type="button" datahub-page="Reports" disabled>REPORTS</button>
+          <button type="button" datahub-page="Journal" disabled>JOURNAL</button>
+          <button type="button" datahub-page="Admin" disabled>ADMIN</button>
+        </nav>
+        <span id="datahub-status" role="status">CONNECTING</span>
+      </details>
       <div class="rail-fill"><span>ACCESS<br>47-ALPHA</span></div>
       <div class="rail-end">74656 / TERMINAL 01</div>
     </aside>
@@ -44,7 +58,7 @@
           <input id="command" type="text" autocomplete="off" spellcheck="false" placeholder="SEARCH THE WEB OR ENTER AN ADDRESS" autofocus>
           <label class="sr-only" for="engine">Search engine</label>
           <select id="engine"><option value="google">GOOGLE.CA</option><option value="duckduckgo">DUCKDUCKGO</option><option value="bing">BING</option></select>
-          <button class="pill gold" type="submit">ENGAGE <span aria-hidden="true">↗</span></button>
+          <button class="pill gold" type="submit">ENGAGE <span aria-hidden="true">â†—</span></button>
         </form>
         <p class="input-hint">ADDRESSES OPEN IN THE LCARS SCREEN. WEB SEARCH OPENS IN A NEW TAB.</p>
       </section>
@@ -56,22 +70,22 @@
         <div class="schematic" aria-hidden="true"><div class="rings"><i></i><span class="network-orbit inner"></span><span class="network-orbit middle"></span><span class="network-orbit outer"></span></div><span>FPLEARNING / NETWORK ACCESS</span></div>
         <div class="system-readout"><div><span>INTERFACE</span><span>LCARS / FPLearning</span></div><div><span>TERMINAL STORAGE</span><span id="storage-status">LOCAL ONLY</span></div><div><span>NETWORK ACTIVITY</span><span>ON NAVIGATION ONLY</span></div><div><span>VISUAL MODE</span><span>STATIC / LOW POWER</span></div></div>
       </section>
-      <footer><span>LCARS 47 • PERSONAL TERMINAL</span><a href="https://www.thelcars.com/themes/voyager.html">PALETTE REFERENCE: THELCARS.COM</a></footer>
+      <footer><span>LCARS 47 â€¢ PERSONAL TERMINAL</span><a href="https://www.thelcars.com/themes/voyager.html">PALETTE REFERENCE: THELCARS.COM</a></footer>
       </div>
       <section id="embedded-screen" class="embedded-screen" aria-labelledby="screen-title" hidden>
         <div class="screen-toolbar">
           <button type="button" id="screen-home" class="pill gold">COMMAND STATION</button>
           <h2 id="screen-title" tabindex="-1">FPL Resources</h2>
-          <a id="screen-external" class="pill peach" target="_blank" rel="noopener">OPEN IN NEW TAB ↗</a>
+          <a id="screen-external" class="pill peach" target="_blank" rel="noopener">OPEN IN NEW TAB â†—</a>
         </div>
         <p class="screen-hint">If a page cannot display here, use Open in new tab.</p>
         <iframe id="screen-frame" title="LCARS embedded content" referrerpolicy="strict-origin-when-cross-origin" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" allowfullscreen sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-downloads"></iframe>
       </section>
       <section id="spotify-panel" class="spotify-panel" aria-label="Spotify player" hidden>
         <div id="spotify-panel-body">
-        <p><a class="pill peach" href="spotify:">LAUNCH SPOTIFY APP ↗</a></p>
+        <p><a class="pill peach" href="spotify:">LAUNCH SPOTIFY APP â†—</a></p>
         <section id="spotify-app-view" class="spotify-app-view" aria-label="Spotify app playlist" hidden>
-          <div class="section-label"><h3 id="spotify-playlist-title">APP PLAYBACK</h3><a id="spotify-playlist-open" target="_blank" rel="noopener">OPEN IN SPOTIFY ↗</a></div>
+          <div class="section-label"><h3 id="spotify-playlist-title">APP PLAYBACK</h3><a id="spotify-playlist-open" target="_blank" rel="noopener">OPEN IN SPOTIFY â†—</a></div>
           <p id="spotify-app-track"></p>
           <p id="spotify-playlist-status" role="status"></p>
           <ol id="spotify-playlist-items" class="spotify-playlist-items"></ol>
@@ -133,7 +147,7 @@
   <template id="spotify-signal-template"><svg class="signal-wave" aria-hidden="true" preserveAspectRatio="none" viewBox="0 0 100 40"><path d="M0.00 19.11L0.69 19.40L1.39 19.54L2.08 18.27L2.78 20.15L3.47 18.62L4.17 13.73L4.86 18.83L5.56 12.81L6.25 13.74L6.94 16.13L7.64 27.91L8.33 19.68L9.03 20.85L9.72 27.78L10.42 27.64L11.11 21.33L11.81 14.56L12.50 20.48L13.19 17.03L13.89 29.85L14.58 9.76L15.28 17.19L15.97 24.27L16.67 22.34L17.36 21.36L18.06 26.26L18.75 13.66L19.44 28.39L20.14 30.36L20.83 8.24L21.53 15.74L22.22 16.44L22.92 16.94L23.61 21.07L24.31 13.37L25.00 24.04L25.69 30.44L26.39 31.81L27.08 29.65L27.78 12.08L28.47 26.93L29.17 27.82L29.86 23.02L30.56 25.08L31.25 13.74L31.94 28.04L32.64 12.26L33.33 21.65L34.03 12.84L34.72 20.99L35.42 6.04L36.11 14.27L36.81 28.57L37.50 12.62L38.19 27.12L38.89 29.30L39.58 23.31L40.28 23.98L40.97 10.81L41.67 19.54L42.36 34.59L43.06 35.35L43.75 21.84L44.44 18.22L45.14 35.31L45.83 21.50L46.53 29.71L47.22 6.67L47.92 12.51L48.61 30.00L49.31 21.50L50.00 29.03L50.69 17.94L51.39 33.39L52.08 5.08L52.78 12.49L53.47 24.60L54.17 20.54L54.86 25.54L55.56 19.10L56.25 26.60L56.94 29.44L57.64 14.16L58.33 4.97L59.03 11.94L59.72 15.18L60.42 35.39L61.11 34.22L61.81 25.93L62.50 10.04L63.19 32.90L63.89 8.65L64.58 8.97L65.28 28.61L65.97 15.32L66.67 16.79L67.36 13.08L68.06 5.28L68.75 8.95L69.44 7.42L70.14 6.17L70.83 6.88L71.53 10.95L72.22 20.33L72.92 19.75L73.61 27.83L74.31 28.54L75.00 20.77L75.69 21.71L76.39 6.99L77.08 8.81L77.78 28.71L78.47 30.81L79.17 15.91L79.86 29.17L80.56 29.30L81.25 13.56L81.94 9.51L82.64 11.13L83.33 10.47L84.03 9.85L84.72 21.07L85.42 14.28L86.11 28.53L86.81 20.73L87.50 21.03L88.19 25.29L88.89 22.34L89.58 29.38L90.28 12.18L90.97 19.84L91.67 20.99L92.36 27.70L93.06 18.58L93.75 17.70L94.44 17.02L95.14 24.96L95.83 19.85L96.53 15.36L97.22 25.66L97.92 15.76L98.61 19.61L99.31 22.47L100.00 21.94"/><path d="M0.00 22.69L0.69 24.14L1.39 15.25L2.08 16.75L2.78 17.34L3.47 19.19L4.17 18.20L4.86 16.37L5.56 19.25L6.25 13.14L6.94 19.28L7.64 18.21L8.33 12.49L9.03 16.47L9.72 22.13L10.42 15.42L11.11 23.80L11.81 16.88L12.50 19.53L13.19 26.29L13.89 16.15L14.58 15.78L15.28 28.03L15.97 13.45L16.67 9.12L17.36 13.58L18.06 23.22L18.75 8.95L19.44 8.67L20.14 27.59L20.83 26.11L21.53 24.51L22.22 17.31L22.92 13.14L23.61 30.01L24.31 25.27L25.00 32.31L25.69 24.73L26.39 16.21L27.08 6.83L27.78 9.07L28.47 13.01L29.17 33.45L29.86 29.01L30.56 20.99L31.25 33.50L31.94 33.40L32.64 8.36L33.33 25.16L34.03 5.39L34.72 26.63L35.42 19.36L36.11 9.43L36.81 6.05L37.50 14.52L38.19 18.73L38.89 8.41L39.58 7.72L40.28 6.18L40.97 18.37L41.67 9.13L42.36 32.53L43.06 32.28L43.75 10.65L44.44 5.92L45.14 33.14L45.83 13.41L46.53 19.06L47.22 11.76L47.92 12.32L48.61 28.59L49.31 9.08L50.00 13.07L50.69 34.49L51.39 29.49L52.08 22.15L52.78 7.16L53.47 22.90L54.17 35.67L54.86 20.48L55.56 25.86L56.25 27.33L56.94 27.88L57.64 16.14L58.33 24.95L59.03 28.52L59.72 12.93L60.42 6.60L61.11 23.97L61.81 8.94L62.50 32.42L63.19 20.13L63.89 9.87L64.58 17.98L65.28 9.73L65.97 21.10L66.67 20.18L67.36 17.56L68.06 12.11L68.75 24.82L69.44 33.73L70.14 18.93L70.83 19.22L71.53 7.16L72.22 18.00L72.92 19.68L73.61 9.22L74.31 23.54L75.00 12.91L75.69 30.09L76.39 19.49L77.08 10.66L77.78 23.74L78.47 18.54L79.17 30.26L79.86 27.72L80.56 9.03L81.25 17.24L81.94 13.63L82.64 24.92L83.33 17.71L84.03 12.76L84.72 29.51L85.42 27.44L86.11 20.58L86.81 26.54L87.50 29.30L88.19 23.96L88.89 15.60L89.58 14.84L90.28 28.22L90.97 26.44L91.67 28.65L92.36 20.06L93.06 24.33L93.75 15.04L94.44 19.87L95.14 17.45L95.83 15.99L96.53 23.85L97.22 19.67L97.92 14.88L98.61 23.78L99.31 23.84L100.00 20.70"/><path d="M0.00 22.21L0.69 23.76L1.39 22.73L2.08 21.89L2.78 24.33L3.47 13.68L4.17 16.06L4.86 23.75L5.56 23.08L6.25 18.97L6.94 19.18L7.64 20.89L8.33 24.23L9.03 26.61L9.72 18.86L10.42 17.43L11.11 26.80L11.81 25.20L12.50 18.49L13.19 29.52L13.89 10.40L14.58 27.11L15.28 25.33L15.97 14.62L16.67 27.47L17.36 23.54L18.06 17.38L18.75 22.61L19.44 17.85L20.14 30.12L20.83 16.95L21.53 26.10L22.22 9.48L22.92 32.38L23.61 23.95L24.31 9.43L25.00 15.08L25.69 22.20L26.39 31.87L27.08 12.22L27.78 11.20L28.47 9.93L29.17 27.66L29.86 28.57L30.56 23.67L31.25 32.55L31.94 29.97L32.64 23.76L33.33 10.25L34.03 30.02L34.72 9.04L35.42 33.45L36.11 29.92L36.81 27.73L37.50 19.56L38.19 18.82L38.89 22.15L39.58 4.74L40.28 18.25L40.97 25.36L41.67 24.93L42.36 17.97L43.06 24.91L43.75 5.79L44.44 4.61L45.14 22.55L45.83 25.76L46.53 32.06L47.22 8.32L47.92 34.72L48.61 15.80L49.31 15.23L50.00 18.30L50.69 17.56L51.39 27.63L52.08 27.80L52.78 10.33L53.47 17.18L54.17 11.08L54.86 28.34L55.56 29.44L56.25 15.00L56.94 34.53L57.64 20.88L58.33 35.42L59.03 22.84L59.72 11.01L60.42 9.58L61.11 23.30L61.81 17.50L62.50 19.61L63.19 17.47L63.89 22.47L64.58 29.14L65.28 17.09L65.97 20.18L66.67 21.16L67.36 19.79L68.06 13.32L68.75 15.85L69.44 10.61L70.14 17.40L70.83 32.12L71.53 11.01L72.22 6.97L72.92 7.81L73.61 9.80L74.31 26.22L75.00 12.60L75.69 22.60L76.39 18.34L77.08 29.28L77.78 10.52L78.47 12.03L79.17 10.38L79.86 22.51L80.56 26.57L81.25 23.20L81.94 20.13L82.64 8.49L83.33 15.97L84.03 28.89L84.72 20.54L85.42 29.16L86.11 20.16L86.81 30.01L87.50 21.60L88.19 25.72L88.89 27.75L89.58 13.80L90.28 16.89L90.97 25.86L91.67 27.77L92.36 25.50L93.06 27.76L93.75 19.58L94.44 12.49L95.14 27.17L95.83 24.22L96.53 18.64L97.22 15.41L97.92 16.30L98.61 21.84L99.31 17.12L100.00 17.19"/></svg></template>
   <dialog id="editor">
     <form id="edit-form">
-      <div class="section-label"><h2>LINK CONTROL</h2><button type="button" id="close" class="close" aria-label="Close link editor">✕</button></div>
+      <div class="section-label"><h2>LINK CONTROL</h2><button type="button" id="close" class="close" aria-label="Close link editor">âœ•</button></div>
       <p>These links appear in the same order on the sidebar and the screen. Add or remove links and move them up or down. Tick Embed in LCARS screen to open a link inside the screen; leave it unticked to open a new tab. Use full https:// or http:// addresses. The LCARS screen works only with pages that allow embedding.</p>
       <div id="edit-rows"></div>
       <button type="button" id="add-link" class="pill silver">ADD LINK</button>

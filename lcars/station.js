@@ -45,8 +45,63 @@ else{
   write('voyager.shared-links',destinations);
 }
 destinations=destinations.map(d=>({...d,mode:destinationMode(d)}));
+if (!destinations.some(d => {
+  const url = safeURL(d.url);
+  return url && ['http://localhost:8501','http://127.0.0.1:8501'].includes(url.origin);
+})) destinations.push({name:'LOCAL DATAHUB',url:'http://localhost:8501/',mode:'screen'});
+
+// DataHub keeps one app session while the host sidebar changes its active page.
+const DATAHUB_ORIGINS = ['http://localhost:8501','http://127.0.0.1:8501'];
+let dataHubOrigin = null;
+const DATAHUB_PAGES = ['Schedule','Workspace','Add Session','Students','Invoicing','Reports','Journal','Admin'];
+let dataHubActive = false;
+function resetDataHub() {
+  dataHubActive = false;
+  dataHubOrigin = null;
+  $('datahub-navigation').hidden = true;
+  document.querySelectorAll('[datahub-page]').forEach(button => {
+    button.disabled = true;
+    button.removeAttribute('aria-current');
+  });
+}
+function dataHubSource(source) {
+  resetDataHub();
+  const url = new URL(source);
+  const isHub = DATAHUB_ORIGINS.includes(url.origin);
+  if (!isHub) return source;
+  const embedded = new URL(url.href);
+  dataHubOrigin = url.origin;
+  embedded.search = url.search;
+  embedded.searchParams.set('embed', 'true');
+  embedded.searchParams.set('lcars', '1');
+  dataHubActive = true;
+  $('datahub-navigation').hidden = false;
+  $('datahub-navigation').open = true;
+  $('datahub-status').textContent = 'START LOCAL DATAHUB';
+  return embedded.href;
+}
+function dataHubMessage(message) {
+  if (dataHubActive) $('screen-frame').contentWindow?.postMessage(message, dataHubOrigin);
+}
+$('screen-frame').addEventListener('load', () => dataHubMessage({type:'fpl-datahub-ping'}));
+document.querySelectorAll('[datahub-page]').forEach(button => button.addEventListener('click', () => {
+  dataHubMessage({type:'fpl-datahub-navigate',page:button.getAttribute('datahub-page')});
+}));
+window.addEventListener('message', event => {
+  if (!dataHubActive || event.origin !== dataHubOrigin ||
+      event.source !== $('screen-frame').contentWindow ||
+      event.data?.type !== 'fpl-datahub-state' || !DATAHUB_PAGES.includes(event.data.selected)) return;
+  $('datahub-status').textContent = event.data.selected.toUpperCase();
+  document.querySelectorAll('[datahub-page]').forEach(button => {
+    button.disabled = false;
+    if (button.getAttribute('datahub-page') === event.data.selected) button.setAttribute('aria-current','page');
+    else button.removeAttribute('aria-current');
+  });
+});
+
 let screenTrigger;
 function setScreenSource(source){
+  source = dataHubSource(source);
   const frame=$('screen-frame'),url=new URL(source);
   // Spotify's documented embed uses its own origin security without a sandbox.
   if(url.hostname==='open.spotify.com'&&url.pathname.startsWith('/embed/'))frame.removeAttribute('sandbox');
@@ -58,6 +113,7 @@ function backgroundSpotify(){
   panel.classList.add('is-background');$('spotify-panel-body').inert=true;
 }
 function openSpotify(){
+  resetDataHub();
   const panel=$('spotify-panel');panel.hidden=false;panel.classList.remove('is-background');
   $('spotify-panel-body').inert=false;
   $('command-station').hidden=true;$('embedded-screen').hidden=false;
@@ -66,6 +122,7 @@ function openSpotify(){
   document.dispatchEvent(new Event('spotify-view-change'));
 }
 function showStation(){
+  resetDataHub();
   $('screen-frame').removeAttribute('src');
   backgroundSpotify();
   $('embedded-screen').hidden=true;$('command-station').hidden=false;
