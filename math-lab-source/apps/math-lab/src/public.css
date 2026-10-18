@@ -1,0 +1,26 @@
+.public-intro {
+  padding: 48px 0 32px;
+  max-width: 850px;
+}
+.public-intro h1 {
+  font-size: clamp(38px, 4.5vw, 62px);
+}
+.public-intro > p:not(.eyebrow) {
+  color: var(--muted);
+  max-width: 720px;
+}
+.public-local-note {
+  font-size: 13px;
+  margin-top: 16px;
+}
+.public-intro + .function-explorer {
+  padding-top: 32px;
+}
+.site-header {
+  gap: 16px;
+}
+@media (max-width: 600px) {
+  .public-intro {
+    padding: 32px 0 24px;
+  }
+}

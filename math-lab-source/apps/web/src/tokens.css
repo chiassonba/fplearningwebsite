@@ -1,0 +1,45 @@
+:root,
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --paper: #081321;
+  --ink: #edf3fc;
+  --muted: #b3c1d4;
+  --line: #2b3d55;
+  --surface: #102136;
+  --notice: #101f32;
+  --accent: #f3c65f;
+  --heading-accent: #f3c65f;
+  --button: #f3c65f;
+  --button-ink: #0a182a;
+  --button-hover: #ffda80;
+  --badge: #1b2f48;
+  --badge-ink: #d7e4f7;
+  --focus: #72ccff;
+  --plot: #0c2039;
+  --plot-ink: #edf3fc;
+  --plot-muted: #b9cce3;
+  --plot-gold: #f5c557;
+  --plot-secondary: #75cefa;
+  --success: #79d1ee;
+  --failure: #f3b773;
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+  --paper: #f3f6fb;
+  --ink: #10243d;
+  --muted: #4c6079;
+  --line: #cbd7e5;
+  --surface: #ffffff;
+  --notice: #e4ebf5;
+  --accent: #855a08;
+  --heading-accent: #225784;
+  --button: #123b64;
+  --button-ink: #ffffff;
+  --button-hover: #1c517f;
+  --badge: #e5edf7;
+  --badge-ink: #36516f;
+  --focus: #996500;
+  --success: #1e6483;
+  --failure: #9b4d12;
+}
