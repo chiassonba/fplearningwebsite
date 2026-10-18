@@ -4,6 +4,16 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
+## [0.1.45] - 2026-10-17
+
+### Added
+
+- Add the requested unlisted `datahub.html` entry at `https://fplearning.ca/datahub.html`, opening the private `https://fpldatah.streamlit.app/` application in the same tab.
+- Provide JavaScript history replacement, a no-JavaScript HTML refresh and a branded manual Open DataHub fallback using the site's existing logo, favicons and resource stylesheet.
+- Keep the entry out of search indexing with `noindex, nofollow, noarchive`; leave public navigation, the main landing page and preview page unchanged.
+- Document the redirect address, private Streamlit login, fallback behavior and the distinction between the entry page and permanent application storage.
+- Validate HTML structure, two-space indentation, the fixed HTTPS destination and inline JavaScript syntax before publication; verify live navigation after Pages deployment.
+
 ## [0.1.44] - 2026-10-17
 
 ### Changed

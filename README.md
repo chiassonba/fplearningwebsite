@@ -59,3 +59,11 @@ Reference: https://docs.github.com/en/pages/configuring-a-custom-domain-for-your
 - The `Brand/` collection is a published snapshot of six FPL logo/icon files already present in `images/`. If the originals are later updated, synchronize the published copies as well.
 - The page has `noindex, nofollow, noarchive` metadata and is not linked from the site's public navigation or sitemap. This discourages indexing but does not restrict access: both the page and assets are public. Do not store student records, credentials, or other sensitive material here.
 - There is no installer in this library. Avoid large binaries in the GitHub Pages repository, since replacements remain in Git history.
+
+## Private DataHub entry
+
+- Entry address: https://fplearning.ca/datahub.html.
+- This standalone page opens https://fpldatah.streamlit.app/ in the same browser tab, where Streamlit enforces the app's private access settings.
+- JavaScript uses history replacement; an immediate HTML refresh also works when JavaScript is disabled. A branded Open DataHub link remains available if automatic navigation is blocked.
+- The address bar changes to the hosted app's address. This page does not embed Streamlit, proxy its login, store credentials, or provide the application's persistent storage.
+- The entry page is unlisted in public navigation and has `noindex, nofollow, noarchive` metadata. The public landing page and existing site resources are unchanged.
