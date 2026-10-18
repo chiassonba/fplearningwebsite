@@ -6,8 +6,8 @@
   <title>FP-LCARS</title>
   <link rel="icon" type="image/png" href="lcars/assets/fpl-lcars-icon.png?v=20261018">
   <meta name="robots" content="noindex, nofollow, noarchive, noimageindex">
-  <link rel="stylesheet" href="lcars/lcars.css?v=20261018-compact-embed">
-  <script src="lcars/station.js?v=20261018-compact-embed" defer></script>
+  <link rel="stylesheet" href="lcars/lcars.css?v=20261018-local-archives">
+  <script src="lcars/station.js?v=20261018-local-archives" defer></script>
   <script src="lcars/spotify.js?v=0.1.47" defer></script>
 </head>
 <body>
@@ -72,12 +72,13 @@
       <footer><span>LCARS 47 &#8226; PERSONAL TERMINAL</span><a id="palette-reference" href="https://www.thelcars.com/themes/voyager.html">PALETTE REFERENCE: THELCARS.COM</a></footer>
       </div>
       <section id="embedded-screen" class="embedded-screen" aria-labelledby="screen-title" hidden>
-        <div class="screen-toolbar">
+        <div class="screen-toolbar" id="screen-toolbar">
           <button type="button" id="screen-home" class="pill gold">COMMAND STATION</button>
           <h2 id="screen-title" tabindex="-1">FPL Resources</h2>
+          <label id="archives-root-control" hidden>LOCAL DRIVE <select id="archives-root" aria-label="Local Google Drive folder" disabled></select></label>
           <a id="screen-external" class="pill peach" target="_blank" rel="noopener">OPEN IN NEW TAB &#8599;</a>
         </div>
-        <p class="screen-hint">If a page cannot display here, use Open in new tab.</p>
+        <p class="screen-hint" id="screen-hint">If a page cannot display here, use Open in new tab.</p>
         <div class="screen-viewport">
         <iframe id="screen-frame" title="LCARS embedded content" referrerpolicy="strict-origin-when-cross-origin" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" allowfullscreen sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-downloads"></iframe>
         </div>
@@ -150,7 +151,7 @@
     <form id="edit-form">
       <div class="section-label"><h2>SYSTEM CONFIGURATION</h2><button type="button" id="close" class="close" aria-label="Close System Configuration">&#10005;</button></div>
       <p>These links appear in the same order on the sidebar and the screen. Add or remove links and move them up or down. Tick Embed in LCARS screen to open a link inside the screen; leave it unticked to open a new tab. Use full https:// or http:// addresses. The LCARS screen works only with pages that allow embedding.</p>
-      <p>Local DataHub links (http://localhost:8501) include the expandable page tabs. Spotify links include playback controls. These tools follow the link when you rename or move it. Enable Embed in LCARS screen to open them here.</p>
+      <p>Local DataHub links (http://localhost:8501) include the expandable page tabs. Local Archives links (http://localhost:8502) include local folders and matching Google Drive links. Spotify links include playback controls. These tools follow the link when you rename or move it. Enable Embed in LCARS screen to open them here.</p>
       <label class="system-theme-control" for="homepage-theme">HOMEPAGE THEME
         <select id="homepage-theme" name="homepage-theme"><option value="voyager">FP-LCARS / Voyager</option><option value="picard">LCARS Picard</option></select>
         <small>This changes the homepage. Set the DataHub theme separately under Admin / Appearance.</small>

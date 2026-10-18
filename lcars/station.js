@@ -17,7 +17,7 @@ function linkColour(link,index){
 }
 const defaults = [
   {name:'COMMUNICATIONS',url:'https://mail.google.com/'},
-  {name:'DATA ARCHIVES',url:'https://drive.google.com/'},
+  {name:'DATA ARCHIVES',url:'http://localhost:8502/',mode:'screen'},
   {name:'ASTROMETRICS',url:'https://www.google.com/maps'},
   {name:'SUBSPACE MEDIA',url:'https://spotify.com/'},
   {name:'FPLearning Interlink',url:'https://fplearning.ca/'}
@@ -32,6 +32,7 @@ function applyHomepageTheme(){
   $('palette-reference').href=`https://www.thelcars.com/themes/${theme}.html`;
 }
 function safeURL(value){try{const u=new URL(value);return ['https:','http:'].includes(u.protocol)?u:null;}catch{return null;}}
+function isLocalArchives(url){return !!url&&['http://localhost:8502','http://127.0.0.1:8502'].includes(url.origin);}
 function isLocalDataHub(url){return !!url&&['http://localhost:8501','http://127.0.0.1:8501'].includes(url.origin);}
 function isSpotify(url){return ['spotify.com','www.spotify.com','open.spotify.com'].includes(url.hostname);}
 function spotifyContent(value){
@@ -44,7 +45,7 @@ function spotifyContent(value){
 function destinationMode(d){
   if(['screen','tab'].includes(d.mode))return d.mode;
   const url=safeURL(d.url);
-  return url&&(isLocalDataHub(url)||isSpotify(url)||url.origin===location.origin||['fplearning.ca','www.fplearning.ca'].includes(url.hostname))?'screen':'tab';
+  return url&&(isLocalDataHub(url)||isLocalArchives(url)||isSpotify(url)||url.origin===location.origin||['fplearning.ca','www.fplearning.ca'].includes(url.hostname))?'screen':'tab';
 }
 function validLinks(value){return Array.isArray(value)&&value.every(d=>d&&typeof d.name==='string'&&d.name.trim()&&safeURL(d.url));}
 const savedShared=read('voyager.shared-links',null);
@@ -78,6 +79,12 @@ if (read('voyager.local-datahub-first',false)!==true) {
 if(read('voyager.chronometer-removed',false)!==true){
   destinations=destinations.filter(d=>!(d.name.trim().toUpperCase()==='CHRONOMETER'&&new URL(d.url).hostname==='calendar.google.com'));
   if(write('voyager.shared-links',destinations))write('voyager.chronometer-removed',true);
+}
+
+// Upgrade only the old Data Archives destination once; keep its position, label and colour.
+if(read('lcars.local-archives-installed',false)!==true){
+  destinations=destinations.map(d=>d.name.trim().toUpperCase()==='DATA ARCHIVES'&&new URL(d.url).hostname==='drive.google.com'?{...d,url:'http://localhost:8502/',mode:'screen'}:d);
+  if(write('voyager.shared-links',destinations))write('lcars.local-archives-installed',true);
 }
 
 // Assign legacy links a palette entry once, so their colour follows manual moves.
@@ -146,9 +153,59 @@ window.addEventListener('message', event => {
   });
 });
 
+// Folder contents remain inside the local frame. Only root labels, its Drive link and height cross to the host.
+let archivesActive=false,archivesOrigin=null;
+function resetArchives(){
+  archivesActive=false;archivesOrigin=null;
+  $('archives-root-control').hidden=true;
+  $('embedded-screen').classList.remove('is-archives');
+  $('embedded-screen').classList.remove('archives-ready');
+  $('screen-hint').textContent='If a page cannot display here, use Open in new tab.';
+  $('screen-external').textContent='OPEN IN NEW TAB \u2197';
+  $('screen-external').removeAttribute('aria-disabled');
+}
+function archivesSource(source){
+  resetArchives();const url=new URL(source);if(!isLocalArchives(url))return source;
+  archivesActive=true;archivesOrigin=url.origin;
+  url.searchParams.set('embed','1');url.searchParams.set('theme',homepageTheme());
+  url.searchParams.set('root',read('lcars.archives-root','fpl'));
+  $('embedded-screen').classList.add('is-archives');
+  $('screen-hint').textContent='Start Local LCARS on this computer to browse your folders.';
+  $('archives-root-control').hidden=false;$('archives-root').disabled=true;
+  $('screen-external').textContent='GOOGLE DRIVE \u2197';
+  $('screen-external').removeAttribute('href');$('screen-external').setAttribute('aria-disabled','true');
+  return url.href;
+}
+function validArchiveDriveLink(value){
+  const url=safeURL(value);return url&&url.origin==='https://drive.google.com'&&!url.hash&&/^\/drive\/(?:u\/\d+\/)?(?:my-drive|folders\/[A-Za-z0-9_-]+)\/?$/.test(url.pathname)?url.href:null;
+}
+$('archives-root').addEventListener('change',()=>{
+  if(!archivesActive)return;
+  write('lcars.archives-root',$('archives-root').value);
+  $('screen-external').removeAttribute('href');$('screen-external').setAttribute('aria-disabled','true');
+  $('screen-frame').contentWindow?.postMessage({type:'fpl-archives-root',root:$('archives-root').value},archivesOrigin);
+});
+$('screen-frame').addEventListener('load',()=>{
+  if(archivesActive)$('screen-frame').contentWindow?.postMessage({type:'fpl-archives-ping'},archivesOrigin);
+});
+window.addEventListener('message',event=>{
+  if(!archivesActive||event.source!==$('screen-frame').contentWindow||event.origin!==archivesOrigin||event.data?.type!=='fpl-archives-state')return;
+  const data=event.data;
+  if(!Array.isArray(data.roots)||data.roots.length>10||!data.roots.every(r=>r&&typeof r.id==='string'&&/^[a-z0-9_-]+$/.test(r.id)&&typeof r.label==='string'&&r.label.length<100)||!data.roots.some(r=>r.id===data.root))return;
+  $('embedded-screen').classList.add('archives-ready');
+  const selector=$('archives-root');
+  const signature=JSON.stringify(data.roots);
+  if(selector.dataset.roots!==signature){selector.replaceChildren();for(const r of data.roots){const option=document.createElement('option');option.value=r.id;option.textContent=r.label;selector.append(option);}selector.dataset.roots=signature;}
+  selector.disabled=false;selector.value=data.root;
+  const url=validArchiveDriveLink(data.drive_url);
+  if(url){$('screen-external').href=url;$('screen-external').removeAttribute('aria-disabled');}
+  else{$('screen-external').removeAttribute('href');$('screen-external').setAttribute('aria-disabled','true');}
+  if(Number.isFinite(data.height)&&data.height>0&&data.height<=50000)$('screen-frame').style.height=Math.max(220,Math.ceil(data.height))+'px';
+});
+
 let screenTrigger;
 function setScreenSource(source){
-  source = dataHubSource(source);
+  source = archivesSource(dataHubSource(source));
   const frame=$('screen-frame'),url=new URL(source);
   // Spotify's documented embed uses its own origin security without a sandbox.
   if(url.hostname==='open.spotify.com'&&url.pathname.startsWith('/embed/'))frame.removeAttribute('sandbox');
@@ -166,6 +223,7 @@ function backgroundSpotify(){
   panel.classList.add('is-background');$('spotify-panel-body').inert=true;
 }
 function openSpotify(){
+  resetArchives();
   resetDataHub();
   document.body.classList.add('media-view');
   const panel=$('spotify-panel');panel.hidden=false;panel.classList.remove('is-background');
@@ -176,6 +234,7 @@ function openSpotify(){
   document.dispatchEvent(new Event('spotify-view-change'));
 }
 function showStation(){
+  resetArchives();
   resetDataHub();
   $('screen-frame').removeAttribute('src');
   backgroundSpotify();
@@ -193,7 +252,7 @@ function openScreen(url,label,trigger){
     const content=spotifyContent(destination.href)||spotifyContent(read('voyager.spotify-player',''));
     if(!$('spotify-frame').hasAttribute('src')&&!$('spotify-panel').dataset.fullPlayer&&content){$('spotify-link').value=content.original;$('spotify-frame').src=content.embed;$('spotify-frame').hidden=false;}
     openSpotify();
-  }else{backgroundSpotify();$('screen-frame').hidden=false;setScreenSource(destination.href);$('screen-external').href=destination.href;}
+  }else{backgroundSpotify();$('screen-frame').hidden=false;setScreenSource(destination.href);if(!archivesActive)$('screen-external').href=destination.href;}
   $('command-station').hidden=true;$('embedded-screen').hidden=false;
   $('screen-title').focus({preventScroll:true});
 }
@@ -326,7 +385,7 @@ function renderEditor(){
     const tools=document.createElement('small');tools.className='link-tools-hint';
     function describeTools(){
       const url=safeURL(addressInput.value);
-      const name=isLocalDataHub(url)?'DATAHUB TABS':url&&isSpotify(url)?'SPOTIFY CONTROLS':'';
+      const name=isLocalDataHub(url)?'DATAHUB TABS':isLocalArchives(url)?'LOCAL FOLDER BROWSER':url&&isSpotify(url)?'SPOTIFY CONTROLS':'';
       tools.textContent=name?(display.checked?`${name} ATTACHED TO THIS LINK`:`ENABLE EMBEDDING TO OPEN ${name} HERE`):'';
       tools.hidden=!name;
     }

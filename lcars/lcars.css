@@ -96,3 +96,31 @@ body.media-view .spotify-sidebar,body.music-playing .spotify-sidebar{display:blo
   .embedded-screen.is-datahub .screen-toolbar h2 { flex-basis:100%; }
   .embedded-screen.is-datahub .screen-toolbar .pill { font-size:12px; padding:12px; }
 }
+
+/* Every embedded screen keeps its controls below the content. Only DataHub needs a top crop. */
+.embedded-screen { display:flex; flex-direction:column; padding-top:0; }
+.embedded-screen .screen-viewport { order:0; overflow:hidden; }
+.embedded-screen .screen-toolbar { order:1; padding-top:14px; gap:12px; }
+.embedded-screen .screen-toolbar h2 { order:0; font-size:20px; min-width:0; }
+.embedded-screen #archives-root-control { order:0; display:flex; align-items:center; gap:10px; font-size:13px; color:var(--silver); }
+#archives-root { min-width:180px; max-width:260px; border:1px solid var(--silver); padding:8px; color:var(--peach); font:16px Antonio,sans-serif; }
+.embedded-screen #screen-external { order:1; }
+.embedded-screen #screen-home { order:2; }
+.embedded-screen .screen-toolbar .pill { min-height:42px; padding:12px 20px; }
+.embedded-screen .screen-hint { order:2; margin:10px 0 0; }
+.embedded-screen.is-archives.archives-ready .screen-hint { display:none; }
+#screen-external[aria-disabled="true"] { opacity:.45; pointer-events:none; }
+/* Keep Spotify's existing player in place while placing its screen controls below it. */
+body.media-view main { display:flex; flex-direction:column; }
+body.media-view .embedded-screen { display:contents; }
+body.media-view .section-band { order:0; }
+body.media-view .screen-viewport { order:1; }
+body.media-view #spotify-panel { order:2; }
+body.media-view .screen-toolbar { order:3; }
+body.media-view .screen-hint { order:4; }
+@media(max-width:760px) {
+ .embedded-screen .screen-toolbar { justify-content:flex-end; }
+ .embedded-screen .screen-toolbar h2 { flex-basis:100%; }
+ .embedded-screen .screen-toolbar .pill { font-size:12px; padding:12px; }
+ .embedded-screen #archives-root-control { flex-basis:100%; justify-content:flex-end; }
+}
