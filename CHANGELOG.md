@@ -4,6 +4,10 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
+### Fixed
+
+- Restore the LCARS browser tab title to FP-LCARS.
+
 ## [0.1.49] - 2026-10-18
 
 ### Fixed
