@@ -137,3 +137,11 @@ body.media-view .screen-hint { order:4; }
 :root[data-lcars-theme="fplcars"] .datahub-navigation summary[data-palette-colour="blue"],
 :root[data-lcars-theme="fplcars"] .destination[data-palette-colour="blue"] .target,
 :root[data-lcars-theme="fplcars"] .datahub-navigation button:nth-child(4n+3) {color:#ffffff;}
+
+/* FPLCARS sidebar uses neutral automatic colours; the explicit Gold link swatch remains available. */
+:root[data-lcars-theme="fplcars"] .rail {--earth:var(--pewter);}
+:root[data-lcars-theme="fplcars"] .rail-end,
+:root[data-lcars-theme="fplcars"] .spotify-sidebar-buttons button[aria-pressed=true] {background:var(--silver);}
+:root[data-lcars-theme="fplcars"] .rail .signal-wave path {stroke:var(--silver);}
+:root[data-lcars-theme="fplcars"] .datahub-navigation button:focus-visible,
+:root[data-lcars-theme="fplcars"] .datahub-navigation summary:focus-visible {outline-color:var(--frost);}
