@@ -8,6 +8,16 @@ All notable changes to this project will be documented here.
 
 - Restore the LCARS browser tab title to FP-LCARS.
 
+## [0.1.50] - 2026-10-19
+
+### Changed
+
+- Remove automatic gold from the FPLCARS sidebar: map its Earth swatch to pewter, use silver for the rail footer and active Spotify controls/wave, and use white DataHub keyboard-focus outlines.
+- Preserve the explicit Gold link colour in System Configuration, including saved gold selections and DataHub summary colours. Saved links, their order and stored colour values remain unchanged.
+- Scope the palette adjustments to the FPLCARS sidebar. Other themes, main-screen tiles, global gold accents, navigation and playback logic retain their existing behavior.
+- Refresh the LCARS stylesheet cache key for version 0.1.50.
+- Verified automatic sidebar colours, manual Gold selection and reload persistence, DataHub summary/focus, Spotify highlights, unchanged main tiles and five other themes, desktop/mobile rendering, JavaScript syntax and Git whitespace checks. No navigation or playback script changes were required.
+
 ## [0.1.49] - 2026-10-18
 
 ### Fixed
